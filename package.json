@@ -1,0 +1,10 @@
+{
+  "name": "nowplay-main",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "kian00sh",
+  "license": "MIT",
+  "dependencies": {
+    "prisma-client-lib": "^1.29.0"
+  }
+}

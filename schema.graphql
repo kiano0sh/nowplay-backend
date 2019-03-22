@@ -1,0 +1,76 @@
+type Query {
+    me: User
+    userById(userId: ID!): User
+    musicMarks: [MusicMark!]!
+    musicMark(musicMarkId: ID!): MusicMark
+    musicMarksByUser(userId: ID!): [MusicMark!]!
+    musicByMarkId(musicMarkId: ID!): [Music!]!
+}
+
+type Mutation {
+    signup( username: String!, phoneNumber: String, email: String, password: String!): AuthPayload!
+    login(username: String, phoneNumber: String, email: String, password: String!): AuthPayload!
+    updateUser(password: String, email: String, firstName: String, lastName: String): User!
+    addUserHome(latitude: Float!, longitude: Float!, address: String): Home
+    followingUser(followerId: ID!): User
+    addFriend(friendId: ID!): User
+    blockUser(hatedUserId: ID!): User
+#    createMusicMark(latitude: Float!, longitude: Float!, musics: [Music!]!, isFavourite: Boolean): MusicMark
+#    updateMusicMark(musicMarkId: ID!, latitude: Float, longitude: Float, musics: [Music!]!, isFavourite: Boolean): MusicMark
+    likeMusicMark(musicMarkId: ID!): MusicMark
+    favouriteMusicMark(musicMarkId: ID!): MusicMark
+    deleteMusicMark(id: String!): MusicMark
+}
+
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
+type User {
+    id: ID!
+    username: String!
+    password: String!
+    email: String
+    isEmailActive: Boolean
+    phoneNumber: String
+    isPhoneNumberActive: Boolean
+    firstName: String
+    lastName: String
+    homeLocation: Home
+    musicMarks: [MusicMark!]!
+    likedMarks: [MusicMark!]!
+    following: [User!]!
+    followers: [User!]!
+    friends: [User!]!
+    blockList: [User!]!
+#    lastLogin: DateTime!
+    soundCloudToken: String
+}
+
+type Home {
+    id: ID!
+    user: User!
+    latitude: Float!
+    longitude: Float!
+    address: String
+}
+
+type Music {
+    id: ID!
+    marks: [MusicMark!]!
+    title: String!
+    singer: String!
+    duration: Float!
+    uri: String!
+}
+
+type MusicMark {
+    id: ID!
+    user: User!
+    latitude: Float!
+    longitude: Float!
+    musics: [Music!]!
+    likedBy: [User!]!
+    favouriteFor: [User!]!
+}

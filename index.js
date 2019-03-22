@@ -1,27 +1,19 @@
-const { prisma } = require('./generated/prisma-client')
+const { GraphQLServer } = require('graphql-yoga');
+const { prisma } = require('./generated/prisma-client');
+const { resolvers } = require('./resolvers');
+const { permissions } = require('./permissions');
 
-// A `main` function so that we can use async/await
-async function main() {
+const server = new GraphQLServer({
+    typeDefs: './schema.graphql',
+    resolvers,
+    middlewares: [permissions],
+    context: request => {
+        return {
+            ...request,
+            prisma,
+        }
+    },
+});
 
-  // Create a new user called `Alice`
-  const newUser = await prisma.createUser({ name: 'Alice' })
-  console.log(`Created new user: ${newUser.name} (ID: ${newUser.id})`)
 
-  // Read all users from the database and print them to the console
-  // const allUsers = await prisma.users()
-  // console.log(allUsers)
-
-  const user = await prisma
-      .user({ id: '5c92930524aa9a00071382ce' })
-  console.log(user)
-
-  const updatedUser = await prisma
-      .updateUser({
-        where: { id: '5c92930524aa9a00071382ce' },
-        data: { name: 'Bob' }
-      })
-  console.log(updatedUser)
-}
-
-main().catch(e => console.error(e))
-
+server.start(() => console.log('Server is running on http://localhost:4000'));

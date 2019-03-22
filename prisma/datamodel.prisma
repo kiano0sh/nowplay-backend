@@ -1,0 +1,56 @@
+type User {
+  id: ID! @unique
+  username: String! @unique
+  password: String!
+  email: String @unique
+  isEmailActive: Boolean! @default(value: "false")
+  phoneNumber: String @unique
+  isPhoneNumberActive: Boolean! @default(value: "false")
+  firstName: String
+  lastName: String
+  homeLocation: Home @relation(name: "HomeOwner", onDelete: CASCADE)
+  musicMarks: [MusicMark!]! @relation(name: "MusicMarker", onDelete: CASCADE)
+  favouriteMarks: [MusicMark!]! @relation(name: "FavouriteMarks", onDelete: CASCADE)
+  likedMarks: [MusicMark!]! @relation(name: "LikedMarks", onDelete: CASCADE)
+  following: [User!]! @relation(name: "FollowRelation")
+  followers: [User!]! @relation(name: "FollowRelation")
+  friends: [User!]! @relation(name: "FriendsRelation")
+  blockList: [User!]! @relation(name: "BlockListRelation")
+  soundCloudToken: String
+#  lastLogin: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Home {
+  id: ID! @unique
+  user: User! @relation(name: "HomeOwner", onDelete: SET_NULL)
+  latitude: Float!
+  longitude: Float!
+  address: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Music {
+  id: ID! @unique
+  marks: [MusicMark!]!
+  title: String!
+  singer: String!
+  duration: Float!
+  uri: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type MusicMark {
+  id: ID! @unique
+  user: User! @relation(name: "MusicMarker", onDelete: SET_NULL)
+  latitude: Float!
+  longitude: Float!
+  musics: [Music!]!
+  likedBy: [User!]! @relation(name: "LikedMarks", onDelete: SET_NULL)
+  favouriteFor: [User!]! @relation(name: "FavouriteMarks", onDelete: SET_NULL)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}

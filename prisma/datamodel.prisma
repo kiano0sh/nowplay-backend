@@ -17,7 +17,7 @@ type User {
   friends: [User!]! @relation(name: "FriendsRelation")
   blockList: [User!]! @relation(name: "BlockListRelation")
   soundCloudToken: String
-#  lastLogin: DateTime!
+#  lastLogin: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -34,10 +34,11 @@ type Home {
 
 type Music {
   id: ID! @unique
-  marks: [MusicMark!]!
-  title: String!
-  singer: String!
-  duration: Float!
+  user: User! @relation(name: "MusicAdder", onDelete: SET_NULL)
+  marks: [MusicMark!]! @relation(name: "MusicMarks")
+  title: String
+  singer: String
+  duration: Float
   uri: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -48,7 +49,8 @@ type MusicMark {
   user: User! @relation(name: "MusicMarker", onDelete: SET_NULL)
   latitude: Float!
   longitude: Float!
-  musics: [Music!]!
+  musics: [Music!]! @relation(name: "MusicMarks", onDelete: CASCADE)
+  spoiled: Boolean! @default(value: "false")
   likedBy: [User!]! @relation(name: "LikedMarks", onDelete: SET_NULL)
   favouriteFor: [User!]! @relation(name: "FavouriteMarks", onDelete: SET_NULL)
   createdAt: DateTime!

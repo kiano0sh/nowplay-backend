@@ -214,10 +214,11 @@ scalar Long
 
 type Music {
   id: ID!
+  user: User!
   marks(where: MusicMarkWhereInput, orderBy: MusicMarkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MusicMark!]
-  title: String!
-  singer: String!
-  duration: Float!
+  title: String
+  singer: String
+  duration: Float
   uri: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -230,10 +231,11 @@ type MusicConnection {
 }
 
 input MusicCreateInput {
+  user: UserCreateOneInput!
   marks: MusicMarkCreateManyWithoutMusicsInput
-  title: String!
-  singer: String!
-  duration: Float!
+  title: String
+  singer: String
+  duration: Float
   uri: String!
 }
 
@@ -243,9 +245,10 @@ input MusicCreateManyWithoutMarksInput {
 }
 
 input MusicCreateWithoutMarksInput {
-  title: String!
-  singer: String!
-  duration: Float!
+  user: UserCreateOneInput!
+  title: String
+  singer: String
+  duration: Float
   uri: String!
 }
 
@@ -260,6 +263,7 @@ type MusicMark {
   latitude: Float!
   longitude: Float!
   musics(where: MusicWhereInput, orderBy: MusicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Music!]
+  spoiled: Boolean!
   likedBy(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   favouriteFor(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   createdAt: DateTime!
@@ -277,6 +281,7 @@ input MusicMarkCreateInput {
   latitude: Float!
   longitude: Float!
   musics: MusicCreateManyWithoutMarksInput
+  spoiled: Boolean
   likedBy: UserCreateManyWithoutLikedMarksInput
   favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
@@ -306,6 +311,7 @@ input MusicMarkCreateWithoutFavouriteForInput {
   latitude: Float!
   longitude: Float!
   musics: MusicCreateManyWithoutMarksInput
+  spoiled: Boolean
   likedBy: UserCreateManyWithoutLikedMarksInput
 }
 
@@ -314,6 +320,7 @@ input MusicMarkCreateWithoutLikedByInput {
   latitude: Float!
   longitude: Float!
   musics: MusicCreateManyWithoutMarksInput
+  spoiled: Boolean
   favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
 
@@ -321,6 +328,7 @@ input MusicMarkCreateWithoutMusicsInput {
   user: UserCreateOneWithoutMusicMarksInput!
   latitude: Float!
   longitude: Float!
+  spoiled: Boolean
   likedBy: UserCreateManyWithoutLikedMarksInput
   favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
@@ -329,6 +337,7 @@ input MusicMarkCreateWithoutUserInput {
   latitude: Float!
   longitude: Float!
   musics: MusicCreateManyWithoutMarksInput
+  spoiled: Boolean
   likedBy: UserCreateManyWithoutLikedMarksInput
   favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
@@ -345,6 +354,8 @@ enum MusicMarkOrderByInput {
   latitude_DESC
   longitude_ASC
   longitude_DESC
+  spoiled_ASC
+  spoiled_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -355,6 +366,7 @@ type MusicMarkPreviousValues {
   id: ID!
   latitude: Float!
   longitude: Float!
+  spoiled: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -390,6 +402,8 @@ input MusicMarkScalarWhereInput {
   longitude_lte: Float
   longitude_gt: Float
   longitude_gte: Float
+  spoiled: Boolean
+  spoiled_not: Boolean
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -434,6 +448,7 @@ input MusicMarkUpdateInput {
   latitude: Float
   longitude: Float
   musics: MusicUpdateManyWithoutMarksInput
+  spoiled: Boolean
   likedBy: UserUpdateManyWithoutLikedMarksInput
   favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
@@ -441,11 +456,13 @@ input MusicMarkUpdateInput {
 input MusicMarkUpdateManyDataInput {
   latitude: Float
   longitude: Float
+  spoiled: Boolean
 }
 
 input MusicMarkUpdateManyMutationInput {
   latitude: Float
   longitude: Float
+  spoiled: Boolean
 }
 
 input MusicMarkUpdateManyWithoutFavouriteForInput {
@@ -506,6 +523,7 @@ input MusicMarkUpdateWithoutFavouriteForDataInput {
   latitude: Float
   longitude: Float
   musics: MusicUpdateManyWithoutMarksInput
+  spoiled: Boolean
   likedBy: UserUpdateManyWithoutLikedMarksInput
 }
 
@@ -514,6 +532,7 @@ input MusicMarkUpdateWithoutLikedByDataInput {
   latitude: Float
   longitude: Float
   musics: MusicUpdateManyWithoutMarksInput
+  spoiled: Boolean
   favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
 
@@ -521,6 +540,7 @@ input MusicMarkUpdateWithoutMusicsDataInput {
   user: UserUpdateOneRequiredWithoutMusicMarksInput
   latitude: Float
   longitude: Float
+  spoiled: Boolean
   likedBy: UserUpdateManyWithoutLikedMarksInput
   favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
@@ -529,6 +549,7 @@ input MusicMarkUpdateWithoutUserDataInput {
   latitude: Float
   longitude: Float
   musics: MusicUpdateManyWithoutMarksInput
+  spoiled: Boolean
   likedBy: UserUpdateManyWithoutLikedMarksInput
   favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
@@ -612,6 +633,8 @@ input MusicMarkWhereInput {
   musics_every: MusicWhereInput
   musics_some: MusicWhereInput
   musics_none: MusicWhereInput
+  spoiled: Boolean
+  spoiled_not: Boolean
   likedBy_every: UserWhereInput
   likedBy_some: UserWhereInput
   likedBy_none: UserWhereInput
@@ -662,9 +685,9 @@ enum MusicOrderByInput {
 
 type MusicPreviousValues {
   id: ID!
-  title: String!
-  singer: String!
-  duration: Float!
+  title: String
+  singer: String
+  duration: Float
   uri: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -775,6 +798,7 @@ input MusicSubscriptionWhereInput {
 }
 
 input MusicUpdateInput {
+  user: UserUpdateOneRequiredInput
   marks: MusicMarkUpdateManyWithoutMusicsInput
   title: String
   singer: String
@@ -814,6 +838,7 @@ input MusicUpdateManyWithWhereNestedInput {
 }
 
 input MusicUpdateWithoutMarksDataInput {
+  user: UserUpdateOneRequiredInput
   title: String
   singer: String
   duration: Float
@@ -846,6 +871,7 @@ input MusicWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  user: UserWhereInput
   marks_every: MusicMarkWhereInput
   marks_some: MusicMarkWhereInput
   marks_none: MusicMarkWhereInput
@@ -1068,6 +1094,11 @@ input UserCreateManyWithoutFriendsInput {
 input UserCreateManyWithoutLikedMarksInput {
   create: [UserCreateWithoutLikedMarksInput!]
   connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutHomeLocationInput {
@@ -1435,6 +1466,26 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
+input UserUpdateDataInput {
+  username: String
+  password: String
+  email: String
+  isEmailActive: Boolean
+  phoneNumber: String
+  isPhoneNumberActive: Boolean
+  firstName: String
+  lastName: String
+  homeLocation: HomeUpdateOneWithoutUserInput
+  musicMarks: MusicMarkUpdateManyWithoutUserInput
+  favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
+  likedMarks: MusicMarkUpdateManyWithoutLikedByInput
+  following: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFollowingInput
+  friends: UserUpdateManyWithoutFriendsInput
+  blockList: UserUpdateManyWithoutBlockListInput
+  soundCloudToken: String
+}
+
 input UserUpdateInput {
   username: String
   password: String
@@ -1554,6 +1605,13 @@ input UserUpdateManyWithoutLikedMarksInput {
 input UserUpdateManyWithWhereNestedInput {
   where: UserScalarWhereInput!
   data: UserUpdateManyDataInput!
+}
+
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+  connect: UserWhereUniqueInput
 }
 
 input UserUpdateOneRequiredWithoutHomeLocationInput {
@@ -1750,6 +1808,11 @@ input UserUpdateWithWhereUniqueWithoutFriendsInput {
 input UserUpdateWithWhereUniqueWithoutLikedMarksInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutLikedMarksDataInput!
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithoutHomeLocationInput {

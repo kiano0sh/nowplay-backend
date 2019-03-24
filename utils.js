@@ -1,5 +1,6 @@
 const { verify } = require('jsonwebtoken');
 
+// TODO should be change
 const APP_SECRET = 'appsecret321';
 
 class AuthError extends Error {

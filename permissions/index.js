@@ -8,11 +8,9 @@ const rules = {
   }),
   isMusicMarker: rule()(async (parent, { musicMarkId }, context) => {
     const userId = getUserId(context);
-    const user = await context.prisma
-      .musicMarks({
-        musicMarkId,
-      })
-      .user();
+    const user = await context.prisma.musicMark({
+        id: musicMarkId,
+      }).user();
     return userId === user.id
   }),
 };
@@ -20,11 +18,12 @@ const rules = {
 const permissions = shield({
   Query: {
     me: rules.isAuthenticatedUser,
-    userById: rules.isAuthenticatedUser,
+    userByUsername: rules.isAuthenticatedUser,
     musicMarks: rules.isAuthenticatedUser,
     musicMark: rules.isAuthenticatedUser,
     musicMarksByUser: rules.isAuthenticatedUser,
     musicByMarkId: rules.isAuthenticatedUser,
+    musics: rules.isAuthenticatedUser,
   },
   Mutation: {
     updateUser: rules.isAuthenticatedUser,
@@ -32,8 +31,8 @@ const permissions = shield({
     followingUser: rules.isAuthenticatedUser,
     addFriend: rules.isAuthenticatedUser,
     blockUser: rules.isAuthenticatedUser,
-    // createMusicMark: rules.isAuthenticatedUser,
-    // updateMusicMark: rules.isMusicMarker,
+    createMusicMark: rules.isAuthenticatedUser,
+    updateMusicMark: rules.isMusicMarker,
     deleteMusicMark: rules.isMusicMarker,
     likeMusicMark: rules.isAuthenticatedUser,
     favouriteMusicMark: rules.isAuthenticatedUser,

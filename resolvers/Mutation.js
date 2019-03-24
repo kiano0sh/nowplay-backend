@@ -77,6 +77,62 @@ const Mutation = {
             user,
         }
     },
+    createMusicMark: async (parent, args, context) => {
+        const {latitude, longitude, musics} = args;
+        // TODO Validation
+        const userId = getUserId(context);
+        // Adding user for each music object (later we need to track em to find which user added music for the same mark)
+        let musicsWithUser = [];
+        musics.map(music => {
+            musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
+        });
+        // Creating a mark on map
+        return await context.prisma.createMusicMark({
+            latitude,
+            longitude,
+            musics: {
+                create: [
+                    ...musicsWithUser
+                ],
+            },
+            user: {
+                connect: {id: userId}
+            }
+        })
+    },
+    // Only owner could update the mark place on map(if there's no extra music added by others)
+    updateMusicMark: async (parent, args, context) => {
+        const {musicMarkId, latitude, longitude} = args;
+        const spoiled = await context.prisma.musicMark({id: musicMarkId}).spoiled();
+        // Check if other people added new music in here
+        if (!spoiled) {
+            return await context.prisma.updateMusicMark({
+                where: {
+                    id: musicMarkId
+                },
+                data: {
+                    longitude,
+                    latitude
+                }
+            })
+        } else {
+            throw new Error("Changing place ability is locked because others added music in here!")
+        }
+    },
+    // Only owner could delete the mark place on map (if there's no extra music added by others)
+    deleteMusicMark: async (parent, args, context) => {
+        const {musicMarkId} = args;
+        const spoiled = await context.prisma.musicMark({id: musicMarkId}).spoiled();
+        if (!spoiled) {
+            return await context.prisma.deleteMusicMark({
+                id: musicMarkId
+            })
+        } else {
+            throw new Error("Removing mark is not possible because others added music in here!")
+        }
+    },
+
+
 };
 
 module.exports = {

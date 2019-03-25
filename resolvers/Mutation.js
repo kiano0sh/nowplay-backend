@@ -77,8 +77,137 @@ const Mutation = {
             user,
         }
     },
+    upsertUserHome: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {latitude, longitude, address} = args;
+        return await context.prisma.updateUser({
+            where: {
+                id: userId
+            },
+            data: {
+                homeLocation: {
+                    upsert: {
+                        create: {
+                            latitude,
+                            longitude,
+                            address
+                        },
+                        update: {
+                            latitude,
+                            longitude,
+                            address
+                        },
+                    }
+                }
+            }
+        }).homeLocation()
+    },
+    deleteUserHome: async (parent, args, context) => {
+        const userId = getUserId(context);
+        return await context.prisma.updateUser({
+            where: {
+                id: userId
+            },
+            data: {
+                homeLocation: {
+                    delete: true
+                }
+            },
+        })
+    },
+    followingUser: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {username} = args;
+        const isFollowed = await context.prisma.$exists.user({followings_every: {username}});
+        console.log(isFollowed);
+        if (!isFollowed) {
+            await context.prisma.updateUser({
+                where: {
+                    id: userId
+                },
+                data: {
+                    followings: {
+                        connect: {
+                            username
+                        }
+                    }
+                }
+            });
+            return await context.prisma.updateUser({
+                where: {
+                    username
+                },
+                data: {
+                    followers: {
+                        connect: {
+                            id: userId
+                        }
+                    }
+                }
+            })
+
+        } else {
+            throw new Error(`You have already followed ${username}!`)
+        }
+    },
+    unfollowingUser: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {username} = args;
+        const isUnfollowed = await context.prisma.$exists.user({followers_every: {username}});
+        if (!isUnfollowed) {
+            await context.prisma.updateUser({
+                where: {
+                    id: userId
+                },
+                data: {
+                    followings: {
+                        disconnect: {
+                            username
+                        }
+                    }
+                }
+            });
+            return await context.prisma.updateUser({
+                where: {
+                    username
+                },
+                data: {
+                    followers: {
+                        disconnect: {
+                            id: userId
+                        }
+                    }
+                }
+            })
+        } else {
+            throw new Error(`You have already unfollowed ${username}!`)
+        }
+    },
+    addFriend: async (parent, args, context) => {
+        const userId = getUserId(context);
+
+    },
+    unFriend: async (parent, args, context) => {
+        const userId = getUserId(context);
+
+    },
+    blockUser: async (parent, args, context) => {
+        const userId = getUserId(context);
+
+    },
+    unblockUser: async (parent, args, context) => {
+        const userId = getUserId(context);
+
+    },
+    likeMusicMark: async (parent, args, context) => {
+        const userId = getUserId(context);
+
+    },
+    favouriteMusicMark: async (parent, args, context) => {
+
+    },
     createMusicMark: async (parent, args, context) => {
-        const {latitude, longitude, musics} = args;
+        const {latitude, longitude, musics, title, description} = args;
         // TODO Validation
         const userId = getUserId(context);
         // Adding user for each music object (later we need to track em to find which user added music for the same mark)
@@ -86,10 +215,13 @@ const Mutation = {
         musics.map(music => {
             musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
         });
+        console.log(musicsWithUser)
         // Creating a mark on map
         return await context.prisma.createMusicMark({
             latitude,
             longitude,
+            title,
+            description,
             musics: {
                 create: [
                     ...musicsWithUser
@@ -102,7 +234,7 @@ const Mutation = {
     },
     // Only owner could update the mark place on map(if there's no extra music added by others)
     updateMusicMark: async (parent, args, context) => {
-        const {musicMarkId, latitude, longitude} = args;
+        const {musicMarkId, latitude, longitude, title, description} = args;
         const spoiled = await context.prisma.musicMark({id: musicMarkId}).spoiled();
         // Check if other people added new music in here
         if (!spoiled) {
@@ -112,7 +244,9 @@ const Mutation = {
                 },
                 data: {
                     longitude,
-                    latitude
+                    latitude,
+                    title,
+                    description
                 }
             })
         } else {
@@ -131,8 +265,66 @@ const Mutation = {
             throw new Error("Removing mark is not possible because others added music in here!")
         }
     },
+    // Adding music to places by place owner or others
+    createMusic: async (parent, args, context) => {
+        const {musicMarkId, musics} = args;
+        const userId = getUserId(context);
+        const user = await context.prisma.musicMark({id: musicMarkId}).user();
+        // Adding user for each music object (later we need to track em to find which user added music for the same mark)
+        let musicsWithUser = [];
+        musics.map(music => {
+            musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
+        });
+        console.log(musicsWithUser);
+        if (userId === user) {
+            return await context.prisma.updateMusicMark({
+                where: {
+                    id: musicMarkId
+                },
+                data: {
+                    musics: {
+                        create: [
+                            ...musicsWithUser
+                        ]
+                    }
+                }
+            })
+        } else {
+            return await context.prisma.updateMusicMark({
+                where: {
+                    id: musicMarkId
+                },
+                data: {
+                    musics: {
+                        create: [
+                            ...musicsWithUser
+                        ]
+                    },
+                    spoiled: true
+                }
+            })
 
-
+        }
+    },
+    updateMusic: async (parent, args, context) => {
+        const {musicId, uri, title, description} = args;
+        return await context.prisma.updateMusic({
+            where: {
+                id: musicId
+            },
+            data: {
+                uri,
+                title,
+                description
+            }
+        })
+    },
+    deleteMusic: async (parent, args, context) => {
+        const {musicId} = args;
+        return await context.prisma.deleteMusic({
+            id: musicId
+        })
+    }
 };
 
 module.exports = {

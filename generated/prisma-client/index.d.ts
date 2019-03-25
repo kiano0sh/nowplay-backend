@@ -242,6 +242,10 @@ export type MusicMarkOrderByInput =
   | "latitude_DESC"
   | "longitude_ASC"
   | "longitude_DESC"
+  | "title_ASC"
+  | "title_DESC"
+  | "description_ASC"
+  | "description_DESC"
   | "spoiled_ASC"
   | "spoiled_DESC"
   | "createdAt_ASC"
@@ -254,6 +258,8 @@ export type MusicOrderByInput =
   | "id_DESC"
   | "title_ASC"
   | "title_DESC"
+  | "description_ASC"
+  | "description_DESC"
   | "singer_ASC"
   | "singer_DESC"
   | "duration_ASC"
@@ -343,6 +349,34 @@ export interface MusicMarkWhereInput {
   longitude_lte?: Float;
   longitude_gt?: Float;
   longitude_gte?: Float;
+  title?: String;
+  title_not?: String;
+  title_in?: String[] | String;
+  title_not_in?: String[] | String;
+  title_lt?: String;
+  title_lte?: String;
+  title_gt?: String;
+  title_gte?: String;
+  title_contains?: String;
+  title_not_contains?: String;
+  title_starts_with?: String;
+  title_not_starts_with?: String;
+  title_ends_with?: String;
+  title_not_ends_with?: String;
+  description?: String;
+  description_not?: String;
+  description_in?: String[] | String;
+  description_not_in?: String[] | String;
+  description_lt?: String;
+  description_lte?: String;
+  description_gt?: String;
+  description_gte?: String;
+  description_contains?: String;
+  description_not_contains?: String;
+  description_starts_with?: String;
+  description_not_starts_with?: String;
+  description_ends_with?: String;
+  description_not_ends_with?: String;
   musics_every?: MusicWhereInput;
   musics_some?: MusicWhereInput;
   musics_none?: MusicWhereInput;
@@ -488,9 +522,9 @@ export interface UserWhereInput {
   likedMarks_every?: MusicMarkWhereInput;
   likedMarks_some?: MusicMarkWhereInput;
   likedMarks_none?: MusicMarkWhereInput;
-  following_every?: UserWhereInput;
-  following_some?: UserWhereInput;
-  following_none?: UserWhereInput;
+  followings_every?: UserWhereInput;
+  followings_some?: UserWhereInput;
+  followings_none?: UserWhereInput;
   followers_every?: UserWhereInput;
   followers_some?: UserWhereInput;
   followers_none?: UserWhereInput;
@@ -618,9 +652,7 @@ export interface MusicWhereInput {
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
   user?: UserWhereInput;
-  marks_every?: MusicMarkWhereInput;
-  marks_some?: MusicMarkWhereInput;
-  marks_none?: MusicMarkWhereInput;
+  marks?: MusicMarkWhereInput;
   title?: String;
   title_not?: String;
   title_in?: String[] | String;
@@ -635,6 +667,20 @@ export interface MusicWhereInput {
   title_not_starts_with?: String;
   title_ends_with?: String;
   title_not_ends_with?: String;
+  description?: String;
+  description_not?: String;
+  description_in?: String[] | String;
+  description_not_in?: String[] | String;
+  description_lt?: String;
+  description_lte?: String;
+  description_gt?: String;
+  description_gte?: String;
+  description_contains?: String;
+  description_not_contains?: String;
+  description_starts_with?: String;
+  description_not_starts_with?: String;
+  description_ends_with?: String;
+  description_not_ends_with?: String;
   singer?: String;
   singer_not?: String;
   singer_in?: String[] | String;
@@ -731,8 +777,8 @@ export interface UserCreateWithoutHomeLocationInput {
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  following?: UserCreateManyWithoutFollowersInput;
-  followers?: UserCreateManyWithoutFollowingInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -746,6 +792,8 @@ export interface MusicMarkCreateManyWithoutUserInput {
 export interface MusicMarkCreateWithoutUserInput {
   latitude: Float;
   longitude: Float;
+  title?: String;
+  description?: String;
   musics?: MusicCreateManyWithoutMarksInput;
   spoiled?: Boolean;
   likedBy?: UserCreateManyWithoutLikedMarksInput;
@@ -760,6 +808,7 @@ export interface MusicCreateManyWithoutMarksInput {
 export interface MusicCreateWithoutMarksInput {
   user: UserCreateOneInput;
   title?: String;
+  description?: String;
   singer?: String;
   duration?: Float;
   uri: String;
@@ -783,8 +832,8 @@ export interface UserCreateInput {
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  following?: UserCreateManyWithoutFollowersInput;
-  followers?: UserCreateManyWithoutFollowingInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -812,6 +861,8 @@ export interface MusicMarkCreateWithoutFavouriteForInput {
   user: UserCreateOneWithoutMusicMarksInput;
   latitude: Float;
   longitude: Float;
+  title?: String;
+  description?: String;
   musics?: MusicCreateManyWithoutMarksInput;
   spoiled?: Boolean;
   likedBy?: UserCreateManyWithoutLikedMarksInput;
@@ -834,8 +885,8 @@ export interface UserCreateWithoutMusicMarksInput {
   homeLocation?: HomeCreateOneWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  following?: UserCreateManyWithoutFollowersInput;
-  followers?: UserCreateManyWithoutFollowingInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -852,6 +903,8 @@ export interface MusicMarkCreateWithoutLikedByInput {
   user: UserCreateOneWithoutMusicMarksInput;
   latitude: Float;
   longitude: Float;
+  title?: String;
+  description?: String;
   musics?: MusicCreateManyWithoutMarksInput;
   spoiled?: Boolean;
   favouriteFor?: UserCreateManyWithoutFavouriteMarksInput;
@@ -876,8 +929,8 @@ export interface UserCreateWithoutFavouriteMarksInput {
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  following?: UserCreateManyWithoutFollowersInput;
-  followers?: UserCreateManyWithoutFollowingInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -901,7 +954,7 @@ export interface UserCreateWithoutFollowersInput {
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  following?: UserCreateManyWithoutFollowersInput;
+  followings?: UserCreateManyWithoutFollowersInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -925,18 +978,20 @@ export interface UserCreateWithoutFriendsInput {
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  following?: UserCreateManyWithoutFollowersInput;
-  followers?: UserCreateManyWithoutFollowingInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
 }
 
-export interface UserCreateManyWithoutFollowingInput {
-  create?: UserCreateWithoutFollowingInput[] | UserCreateWithoutFollowingInput;
+export interface UserCreateManyWithoutFollowingsInput {
+  create?:
+    | UserCreateWithoutFollowingsInput[]
+    | UserCreateWithoutFollowingsInput;
   connect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
 }
 
-export interface UserCreateWithoutFollowingInput {
+export interface UserCreateWithoutFollowingsInput {
   username: String;
   password: String;
   email?: String;
@@ -949,7 +1004,7 @@ export interface UserCreateWithoutFollowingInput {
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  followers?: UserCreateManyWithoutFollowingInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -973,8 +1028,8 @@ export interface UserCreateWithoutBlockListInput {
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  following?: UserCreateManyWithoutFollowersInput;
-  followers?: UserCreateManyWithoutFollowingInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   soundCloudToken?: String;
 }
@@ -998,8 +1053,8 @@ export interface UserCreateWithoutLikedMarksInput {
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
-  following?: UserCreateManyWithoutFollowersInput;
-  followers?: UserCreateManyWithoutFollowingInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -1031,8 +1086,8 @@ export interface UserUpdateWithoutHomeLocationDataInput {
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  following?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -1064,6 +1119,8 @@ export interface MusicMarkUpdateWithWhereUniqueWithoutUserInput {
 export interface MusicMarkUpdateWithoutUserDataInput {
   latitude?: Float;
   longitude?: Float;
+  title?: String;
+  description?: String;
   musics?: MusicUpdateManyWithoutMarksInput;
   spoiled?: Boolean;
   likedBy?: UserUpdateManyWithoutLikedMarksInput;
@@ -1096,6 +1153,7 @@ export interface MusicUpdateWithWhereUniqueWithoutMarksInput {
 export interface MusicUpdateWithoutMarksDataInput {
   user?: UserUpdateOneRequiredInput;
   title?: String;
+  description?: String;
   singer?: String;
   duration?: Float;
   uri?: String;
@@ -1121,8 +1179,8 @@ export interface UserUpdateDataInput {
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  following?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -1177,6 +1235,8 @@ export interface MusicMarkUpdateWithoutFavouriteForDataInput {
   user?: UserUpdateOneRequiredWithoutMusicMarksInput;
   latitude?: Float;
   longitude?: Float;
+  title?: String;
+  description?: String;
   musics?: MusicUpdateManyWithoutMarksInput;
   spoiled?: Boolean;
   likedBy?: UserUpdateManyWithoutLikedMarksInput;
@@ -1201,8 +1261,8 @@ export interface UserUpdateWithoutMusicMarksDataInput {
   homeLocation?: HomeUpdateOneWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  following?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -1237,6 +1297,8 @@ export interface MusicMarkUpdateWithoutLikedByDataInput {
   user?: UserUpdateOneRequiredWithoutMusicMarksInput;
   latitude?: Float;
   longitude?: Float;
+  title?: String;
+  description?: String;
   musics?: MusicUpdateManyWithoutMarksInput;
   spoiled?: Boolean;
   favouriteFor?: UserUpdateManyWithoutFavouriteMarksInput;
@@ -1279,8 +1341,8 @@ export interface UserUpdateWithoutFavouriteMarksDataInput {
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  following?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -1322,7 +1384,7 @@ export interface UserUpdateWithoutFollowersDataInput {
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  following?: UserUpdateManyWithoutFollowersInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -1364,36 +1426,38 @@ export interface UserUpdateWithoutFriendsDataInput {
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  following?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
 }
 
-export interface UserUpdateManyWithoutFollowingInput {
-  create?: UserCreateWithoutFollowingInput[] | UserCreateWithoutFollowingInput;
+export interface UserUpdateManyWithoutFollowingsInput {
+  create?:
+    | UserCreateWithoutFollowingsInput[]
+    | UserCreateWithoutFollowingsInput;
   delete?: UserWhereUniqueInput[] | UserWhereUniqueInput;
   connect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
   set?: UserWhereUniqueInput[] | UserWhereUniqueInput;
   disconnect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
   update?:
-    | UserUpdateWithWhereUniqueWithoutFollowingInput[]
-    | UserUpdateWithWhereUniqueWithoutFollowingInput;
+    | UserUpdateWithWhereUniqueWithoutFollowingsInput[]
+    | UserUpdateWithWhereUniqueWithoutFollowingsInput;
   upsert?:
-    | UserUpsertWithWhereUniqueWithoutFollowingInput[]
-    | UserUpsertWithWhereUniqueWithoutFollowingInput;
+    | UserUpsertWithWhereUniqueWithoutFollowingsInput[]
+    | UserUpsertWithWhereUniqueWithoutFollowingsInput;
   deleteMany?: UserScalarWhereInput[] | UserScalarWhereInput;
   updateMany?:
     | UserUpdateManyWithWhereNestedInput[]
     | UserUpdateManyWithWhereNestedInput;
 }
 
-export interface UserUpdateWithWhereUniqueWithoutFollowingInput {
+export interface UserUpdateWithWhereUniqueWithoutFollowingsInput {
   where: UserWhereUniqueInput;
-  data: UserUpdateWithoutFollowingDataInput;
+  data: UserUpdateWithoutFollowingsDataInput;
 }
 
-export interface UserUpdateWithoutFollowingDataInput {
+export interface UserUpdateWithoutFollowingsDataInput {
   username?: String;
   password?: String;
   email?: String;
@@ -1406,7 +1470,7 @@ export interface UserUpdateWithoutFollowingDataInput {
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -1448,8 +1512,8 @@ export interface UserUpdateWithoutBlockListDataInput {
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  following?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   soundCloudToken?: String;
 }
@@ -1615,10 +1679,10 @@ export interface UserUpdateManyDataInput {
   soundCloudToken?: String;
 }
 
-export interface UserUpsertWithWhereUniqueWithoutFollowingInput {
+export interface UserUpsertWithWhereUniqueWithoutFollowingsInput {
   where: UserWhereUniqueInput;
-  update: UserUpdateWithoutFollowingDataInput;
-  create: UserCreateWithoutFollowingInput;
+  update: UserUpdateWithoutFollowingsDataInput;
+  create: UserCreateWithoutFollowingsInput;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutFriendsInput {
@@ -1676,6 +1740,34 @@ export interface MusicMarkScalarWhereInput {
   longitude_lte?: Float;
   longitude_gt?: Float;
   longitude_gte?: Float;
+  title?: String;
+  title_not?: String;
+  title_in?: String[] | String;
+  title_not_in?: String[] | String;
+  title_lt?: String;
+  title_lte?: String;
+  title_gt?: String;
+  title_gte?: String;
+  title_contains?: String;
+  title_not_contains?: String;
+  title_starts_with?: String;
+  title_not_starts_with?: String;
+  title_ends_with?: String;
+  title_not_ends_with?: String;
+  description?: String;
+  description_not?: String;
+  description_in?: String[] | String;
+  description_not_in?: String[] | String;
+  description_lt?: String;
+  description_lte?: String;
+  description_gt?: String;
+  description_gte?: String;
+  description_contains?: String;
+  description_not_contains?: String;
+  description_starts_with?: String;
+  description_not_starts_with?: String;
+  description_ends_with?: String;
+  description_not_ends_with?: String;
   spoiled?: Boolean;
   spoiled_not?: Boolean;
   createdAt?: DateTimeInput;
@@ -1707,6 +1799,8 @@ export interface MusicMarkUpdateManyWithWhereNestedInput {
 export interface MusicMarkUpdateManyDataInput {
   latitude?: Float;
   longitude?: Float;
+  title?: String;
+  description?: String;
   spoiled?: Boolean;
 }
 
@@ -1752,8 +1846,8 @@ export interface UserUpdateWithoutLikedMarksDataInput {
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
-  following?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -1811,6 +1905,20 @@ export interface MusicScalarWhereInput {
   title_not_starts_with?: String;
   title_ends_with?: String;
   title_not_ends_with?: String;
+  description?: String;
+  description_not?: String;
+  description_in?: String[] | String;
+  description_not_in?: String[] | String;
+  description_lt?: String;
+  description_lte?: String;
+  description_gt?: String;
+  description_gte?: String;
+  description_contains?: String;
+  description_not_contains?: String;
+  description_starts_with?: String;
+  description_not_starts_with?: String;
+  description_ends_with?: String;
+  description_not_ends_with?: String;
   singer?: String;
   singer_not?: String;
   singer_in?: String[] | String;
@@ -1875,6 +1983,7 @@ export interface MusicUpdateManyWithWhereNestedInput {
 
 export interface MusicUpdateManyDataInput {
   title?: String;
+  description?: String;
   singer?: String;
   duration?: Float;
   uri?: String;
@@ -1899,24 +2008,25 @@ export interface HomeUpdateManyMutationInput {
 
 export interface MusicCreateInput {
   user: UserCreateOneInput;
-  marks?: MusicMarkCreateManyWithoutMusicsInput;
+  marks: MusicMarkCreateOneWithoutMusicsInput;
   title?: String;
+  description?: String;
   singer?: String;
   duration?: Float;
   uri: String;
 }
 
-export interface MusicMarkCreateManyWithoutMusicsInput {
-  create?:
-    | MusicMarkCreateWithoutMusicsInput[]
-    | MusicMarkCreateWithoutMusicsInput;
-  connect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
+export interface MusicMarkCreateOneWithoutMusicsInput {
+  create?: MusicMarkCreateWithoutMusicsInput;
+  connect?: MusicMarkWhereUniqueInput;
 }
 
 export interface MusicMarkCreateWithoutMusicsInput {
   user: UserCreateOneWithoutMusicMarksInput;
   latitude: Float;
   longitude: Float;
+  title?: String;
+  description?: String;
   spoiled?: Boolean;
   likedBy?: UserCreateManyWithoutLikedMarksInput;
   favouriteFor?: UserCreateManyWithoutFavouriteMarksInput;
@@ -1924,55 +2034,40 @@ export interface MusicMarkCreateWithoutMusicsInput {
 
 export interface MusicUpdateInput {
   user?: UserUpdateOneRequiredInput;
-  marks?: MusicMarkUpdateManyWithoutMusicsInput;
+  marks?: MusicMarkUpdateOneRequiredWithoutMusicsInput;
   title?: String;
+  description?: String;
   singer?: String;
   duration?: Float;
   uri?: String;
 }
 
-export interface MusicMarkUpdateManyWithoutMusicsInput {
-  create?:
-    | MusicMarkCreateWithoutMusicsInput[]
-    | MusicMarkCreateWithoutMusicsInput;
-  delete?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-  connect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-  set?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-  disconnect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-  update?:
-    | MusicMarkUpdateWithWhereUniqueWithoutMusicsInput[]
-    | MusicMarkUpdateWithWhereUniqueWithoutMusicsInput;
-  upsert?:
-    | MusicMarkUpsertWithWhereUniqueWithoutMusicsInput[]
-    | MusicMarkUpsertWithWhereUniqueWithoutMusicsInput;
-  deleteMany?: MusicMarkScalarWhereInput[] | MusicMarkScalarWhereInput;
-  updateMany?:
-    | MusicMarkUpdateManyWithWhereNestedInput[]
-    | MusicMarkUpdateManyWithWhereNestedInput;
-}
-
-export interface MusicMarkUpdateWithWhereUniqueWithoutMusicsInput {
-  where: MusicMarkWhereUniqueInput;
-  data: MusicMarkUpdateWithoutMusicsDataInput;
+export interface MusicMarkUpdateOneRequiredWithoutMusicsInput {
+  create?: MusicMarkCreateWithoutMusicsInput;
+  update?: MusicMarkUpdateWithoutMusicsDataInput;
+  upsert?: MusicMarkUpsertWithoutMusicsInput;
+  connect?: MusicMarkWhereUniqueInput;
 }
 
 export interface MusicMarkUpdateWithoutMusicsDataInput {
   user?: UserUpdateOneRequiredWithoutMusicMarksInput;
   latitude?: Float;
   longitude?: Float;
+  title?: String;
+  description?: String;
   spoiled?: Boolean;
   likedBy?: UserUpdateManyWithoutLikedMarksInput;
   favouriteFor?: UserUpdateManyWithoutFavouriteMarksInput;
 }
 
-export interface MusicMarkUpsertWithWhereUniqueWithoutMusicsInput {
-  where: MusicMarkWhereUniqueInput;
+export interface MusicMarkUpsertWithoutMusicsInput {
   update: MusicMarkUpdateWithoutMusicsDataInput;
   create: MusicMarkCreateWithoutMusicsInput;
 }
 
 export interface MusicUpdateManyMutationInput {
   title?: String;
+  description?: String;
   singer?: String;
   duration?: Float;
   uri?: String;
@@ -1982,6 +2077,8 @@ export interface MusicMarkCreateInput {
   user: UserCreateOneWithoutMusicMarksInput;
   latitude: Float;
   longitude: Float;
+  title?: String;
+  description?: String;
   musics?: MusicCreateManyWithoutMarksInput;
   spoiled?: Boolean;
   likedBy?: UserCreateManyWithoutLikedMarksInput;
@@ -1992,6 +2089,8 @@ export interface MusicMarkUpdateInput {
   user?: UserUpdateOneRequiredWithoutMusicMarksInput;
   latitude?: Float;
   longitude?: Float;
+  title?: String;
+  description?: String;
   musics?: MusicUpdateManyWithoutMarksInput;
   spoiled?: Boolean;
   likedBy?: UserUpdateManyWithoutLikedMarksInput;
@@ -2001,6 +2100,8 @@ export interface MusicMarkUpdateInput {
 export interface MusicMarkUpdateManyMutationInput {
   latitude?: Float;
   longitude?: Float;
+  title?: String;
+  description?: String;
   spoiled?: Boolean;
 }
 
@@ -2017,8 +2118,8 @@ export interface UserUpdateInput {
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  following?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
@@ -2174,7 +2275,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
       last?: Int;
     }
   ) => T;
-  following: <T = FragmentableArray<User>>(
+  followings: <T = FragmentableArray<User>>(
     args?: {
       where?: UserWhereInput;
       orderBy?: UserOrderByInput;
@@ -2269,7 +2370,7 @@ export interface UserSubscription
       last?: Int;
     }
   ) => T;
-  following: <T = Promise<AsyncIterator<UserSubscription>>>(
+  followings: <T = Promise<AsyncIterator<UserSubscription>>>(
     args?: {
       where?: UserWhereInput;
       orderBy?: UserOrderByInput;
@@ -2322,6 +2423,8 @@ export interface MusicMark {
   id: ID_Output;
   latitude: Float;
   longitude: Float;
+  title?: String;
+  description?: String;
   spoiled: Boolean;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -2332,6 +2435,8 @@ export interface MusicMarkPromise extends Promise<MusicMark>, Fragmentable {
   user: <T = UserPromise>() => T;
   latitude: () => Promise<Float>;
   longitude: () => Promise<Float>;
+  title: () => Promise<String>;
+  description: () => Promise<String>;
   musics: <T = FragmentableArray<Music>>(
     args?: {
       where?: MusicWhereInput;
@@ -2377,6 +2482,8 @@ export interface MusicMarkSubscription
   user: <T = UserSubscription>() => T;
   latitude: () => Promise<AsyncIterator<Float>>;
   longitude: () => Promise<AsyncIterator<Float>>;
+  title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   musics: <T = Promise<AsyncIterator<MusicSubscription>>>(
     args?: {
       where?: MusicWhereInput;
@@ -2418,6 +2525,7 @@ export interface MusicMarkSubscription
 export interface Music {
   id: ID_Output;
   title?: String;
+  description?: String;
   singer?: String;
   duration?: Float;
   uri: String;
@@ -2428,18 +2536,9 @@ export interface Music {
 export interface MusicPromise extends Promise<Music>, Fragmentable {
   id: () => Promise<ID_Output>;
   user: <T = UserPromise>() => T;
-  marks: <T = FragmentableArray<MusicMark>>(
-    args?: {
-      where?: MusicMarkWhereInput;
-      orderBy?: MusicMarkOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
+  marks: <T = MusicMarkPromise>() => T;
   title: () => Promise<String>;
+  description: () => Promise<String>;
   singer: () => Promise<String>;
   duration: () => Promise<Float>;
   uri: () => Promise<String>;
@@ -2452,18 +2551,9 @@ export interface MusicSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   user: <T = UserSubscription>() => T;
-  marks: <T = Promise<AsyncIterator<MusicMarkSubscription>>>(
-    args?: {
-      where?: MusicMarkWhereInput;
-      orderBy?: MusicMarkOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
+  marks: <T = MusicMarkSubscription>() => T;
   title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   singer: () => Promise<AsyncIterator<String>>;
   duration: () => Promise<AsyncIterator<Float>>;
   uri: () => Promise<AsyncIterator<String>>;
@@ -2812,6 +2902,7 @@ export interface MusicSubscriptionPayloadSubscription
 export interface MusicPreviousValues {
   id: ID_Output;
   title?: String;
+  description?: String;
   singer?: String;
   duration?: Float;
   uri: String;
@@ -2824,6 +2915,7 @@ export interface MusicPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
+  description: () => Promise<String>;
   singer: () => Promise<String>;
   duration: () => Promise<Float>;
   uri: () => Promise<String>;
@@ -2836,6 +2928,7 @@ export interface MusicPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   singer: () => Promise<AsyncIterator<String>>;
   duration: () => Promise<AsyncIterator<Float>>;
   uri: () => Promise<AsyncIterator<String>>;
@@ -2872,6 +2965,8 @@ export interface MusicMarkPreviousValues {
   id: ID_Output;
   latitude: Float;
   longitude: Float;
+  title?: String;
+  description?: String;
   spoiled: Boolean;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -2883,6 +2978,8 @@ export interface MusicMarkPreviousValuesPromise
   id: () => Promise<ID_Output>;
   latitude: () => Promise<Float>;
   longitude: () => Promise<Float>;
+  title: () => Promise<String>;
+  description: () => Promise<String>;
   spoiled: () => Promise<Boolean>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -2894,6 +2991,8 @@ export interface MusicMarkPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   latitude: () => Promise<AsyncIterator<Float>>;
   longitude: () => Promise<AsyncIterator<Float>>;
+  title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   spoiled: () => Promise<AsyncIterator<Boolean>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;

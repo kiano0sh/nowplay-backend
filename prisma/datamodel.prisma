@@ -12,7 +12,7 @@ type User {
   musicMarks: [MusicMark!]! @relation(name: "MusicMarker", onDelete: CASCADE)
   favouriteMarks: [MusicMark!]! @relation(name: "FavouriteMarks", onDelete: CASCADE)
   likedMarks: [MusicMark!]! @relation(name: "LikedMarks", onDelete: CASCADE)
-  following: [User!]! @relation(name: "FollowRelation")
+  followings: [User!]! @relation(name: "FollowRelation")
   followers: [User!]! @relation(name: "FollowRelation")
   friends: [User!]! @relation(name: "FriendsRelation")
   blockList: [User!]! @relation(name: "BlockListRelation")
@@ -35,8 +35,9 @@ type Home {
 type Music {
   id: ID! @unique
   user: User! @relation(name: "MusicAdder", onDelete: SET_NULL)
-  marks: [MusicMark!]! @relation(name: "MusicMarks")
+  marks: MusicMark! @relation(name: "Musics")
   title: String
+  description: String
   singer: String
   duration: Float
   uri: String!
@@ -49,7 +50,9 @@ type MusicMark {
   user: User! @relation(name: "MusicMarker", onDelete: SET_NULL)
   latitude: Float!
   longitude: Float!
-  musics: [Music!]! @relation(name: "MusicMarks", onDelete: CASCADE)
+  title: String
+  description: String
+  musics: [Music!]! @relation(name: "Musics", onDelete: CASCADE)
   spoiled: Boolean! @default(value: "false")
   likedBy: [User!]! @relation(name: "LikedMarks", onDelete: SET_NULL)
   favouriteFor: [User!]! @relation(name: "FavouriteMarks", onDelete: SET_NULL)

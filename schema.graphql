@@ -1,4 +1,4 @@
-#scalar DateTime
+scalar DateTime
 
 type Query {
     me: User
@@ -14,13 +14,21 @@ type Mutation {
     signup(username: String!, phoneNumber: String, email: String, password: String!): AuthPayload!
     login(username: String, phoneNumber: String, email: String, password: String!): AuthPayload!
     updateUser(password: String, email: String, firstName: String, lastName: String): User!
-    addUserHome(latitude: Float!, longitude: Float!, address: String): Home
-    followingUser(followerId: ID!): User
-    addFriend(friendId: ID!): User
-    blockUser(hatedUserId: ID!): User
-    createMusicMark(latitude: Float!, longitude: Float!, musics: [MusicInput!]!): MusicMark
-    updateMusicMark(musicMarkId: ID!, latitude: Float, longitude: Float): MusicMark
+    upsertUserHome(latitude: Float!, longitude: Float!, address: String): Home
+    # No need for entries cuz we already have userId
+    deleteUserHome: Home
+    followingUser(username: String!): User
+    unfollowingUser(username: String!): User
+    addFriend(username: String!): User
+    unFriend(username: String!): User
+    blockUser(username: String!): User
+    unblockUser(username: ID!): User
+    createMusicMark(latitude: Float!, longitude: Float!, title: String, description: String, musics: [MusicInput!]!): MusicMark
+    updateMusicMark(musicMarkId: ID!, latitude: Float, longitude: Float, title: String, description: String): MusicMark
     deleteMusicMark(musicMarkId: ID!): MusicMark
+    createMusic(musicMarkId: ID!, musics: [MusicInput!]!): MusicMark
+    updateMusic(musicId: ID!, uri: String!, title: String, description: String): Music
+    deleteMusic(musicId: ID!): Music
     likeMusicMark(musicMarkId: ID!): MusicMark
     favouriteMusicMark(musicMarkId: ID!): MusicMark
 }
@@ -43,12 +51,14 @@ type User {
     homeLocation: Home
     musicMarks: [MusicMark!]!
     likedMarks: [MusicMark!]!
-    following: [User!]!
+    followings: [User!]!
     followers: [User!]!
     friends: [User!]!
     blockList: [User!]!
 #    lastLogin: DateTime
     soundCloudToken: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 
 type Home {
@@ -57,6 +67,8 @@ type Home {
     latitude: Float!
     longitude: Float!
     address: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 
 type Music {
@@ -64,9 +76,12 @@ type Music {
     user: User!
     marks: [MusicMark!]!
     title: String
+    description: String
     singer: String
     duration: Float
     uri: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 
 type MusicMark {
@@ -74,15 +89,25 @@ type MusicMark {
     user: User!
     latitude: Float!
     longitude: Float!
+    title: String
+    description: String
     musics: [Music!]!
     likedBy: [User!]!
     favouriteFor: [User!]!
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 
 input MusicMarkInput {
     id: ID!
+    latitude: Float!
+    longitude: Float!
+    title: String
+    description: String
 }
 
 input MusicInput {
     uri: String!
+    title: String
+    description: String
 }

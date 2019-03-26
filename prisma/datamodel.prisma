@@ -10,6 +10,7 @@ type User {
   lastName: String
   homeLocation: Home @relation(name: "HomeOwner", onDelete: CASCADE)
   musicMarks: [MusicMark!]! @relation(name: "MusicMarker", onDelete: CASCADE)
+  comments: [Comment!]! @relation(name: "CommentAuthor", onDelete: CASCADE)
   favouriteMarks: [MusicMark!]! @relation(name: "FavouriteMarks", onDelete: CASCADE)
   likedMarks: [MusicMark!]! @relation(name: "LikedMarks", onDelete: CASCADE)
   followings: [User!]! @relation(name: "FollowRelation")
@@ -17,7 +18,7 @@ type User {
   friends: [User!]! @relation(name: "FriendsRelation")
   blockList: [User!]! @relation(name: "BlockListRelation")
   soundCloudToken: String
-#  lastLogin: DateTime
+  lastLogin: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -54,8 +55,16 @@ type MusicMark {
   description: String
   musics: [Music!]! @relation(name: "Musics", onDelete: CASCADE)
   spoiled: Boolean! @default(value: "false")
+  comments: [Comment!]! @relation(name: "Comments", onDelete: CASCADE)
   likedBy: [User!]! @relation(name: "LikedMarks", onDelete: SET_NULL)
   favouriteFor: [User!]! @relation(name: "FavouriteMarks", onDelete: SET_NULL)
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+type Comment {
+  id: ID! @unique
+  musicMark: MusicMark! @relation(name: "Comments", onDelete: SET_NULL)
+  description: String!
+  author: User! @relation(name: "CommentAuthor", onDelete: SET_NULL)
 }

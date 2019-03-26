@@ -14,6 +14,7 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
   U[keyof U];
 
 export interface Exists {
+  comment: (where?: CommentWhereInput) => Promise<boolean>;
   home: (where?: HomeWhereInput) => Promise<boolean>;
   music: (where?: MusicWhereInput) => Promise<boolean>;
   musicMark: (where?: MusicMarkWhereInput) => Promise<boolean>;
@@ -39,6 +40,29 @@ export interface Prisma {
    * Queries
    */
 
+  comment: (where: CommentWhereUniqueInput) => CommentPromise;
+  comments: (
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<Comment>;
+  commentsConnection: (
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => CommentConnectionPromise;
   home: (where: HomeWhereUniqueInput) => HomePromise;
   homes: (
     args?: {
@@ -137,6 +161,22 @@ export interface Prisma {
    * Mutations
    */
 
+  createComment: (data: CommentCreateInput) => CommentPromise;
+  updateComment: (
+    args: { data: CommentUpdateInput; where: CommentWhereUniqueInput }
+  ) => CommentPromise;
+  updateManyComments: (
+    args: { data: CommentUpdateManyMutationInput; where?: CommentWhereInput }
+  ) => BatchPayloadPromise;
+  upsertComment: (
+    args: {
+      where: CommentWhereUniqueInput;
+      create: CommentCreateInput;
+      update: CommentUpdateInput;
+    }
+  ) => CommentPromise;
+  deleteComment: (where: CommentWhereUniqueInput) => CommentPromise;
+  deleteManyComments: (where?: CommentWhereInput) => BatchPayloadPromise;
   createHome: (data: HomeCreateInput) => HomePromise;
   updateHome: (
     args: { data: HomeUpdateInput; where: HomeWhereUniqueInput }
@@ -213,6 +253,9 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  comment: (
+    where?: CommentSubscriptionWhereInput
+  ) => CommentSubscriptionPayloadSubscription;
   home: (
     where?: HomeSubscriptionWhereInput
   ) => HomeSubscriptionPayloadSubscription;
@@ -253,19 +296,11 @@ export type MusicMarkOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type MusicOrderByInput =
+export type CommentOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "title_ASC"
-  | "title_DESC"
   | "description_ASC"
   | "description_DESC"
-  | "singer_ASC"
-  | "singer_DESC"
-  | "duration_ASC"
-  | "duration_DESC"
-  | "uri_ASC"
-  | "uri_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -292,6 +327,26 @@ export type UserOrderByInput =
   | "lastName_DESC"
   | "soundCloudToken_ASC"
   | "soundCloudToken_DESC"
+  | "lastLogin_ASC"
+  | "lastLogin_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type MusicOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "title_ASC"
+  | "title_DESC"
+  | "description_ASC"
+  | "description_DESC"
+  | "singer_ASC"
+  | "singer_DESC"
+  | "duration_ASC"
+  | "duration_DESC"
+  | "uri_ASC"
+  | "uri_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -313,7 +368,7 @@ export type HomeOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type HomeWhereUniqueInput = AtLeastOne<{
+export type CommentWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
@@ -382,6 +437,9 @@ export interface MusicMarkWhereInput {
   musics_none?: MusicWhereInput;
   spoiled?: Boolean;
   spoiled_not?: Boolean;
+  comments_every?: CommentWhereInput;
+  comments_some?: CommentWhereInput;
+  comments_none?: CommentWhereInput;
   likedBy_every?: UserWhereInput;
   likedBy_some?: UserWhereInput;
   likedBy_none?: UserWhereInput;
@@ -516,6 +574,9 @@ export interface UserWhereInput {
   musicMarks_every?: MusicMarkWhereInput;
   musicMarks_some?: MusicMarkWhereInput;
   musicMarks_none?: MusicMarkWhereInput;
+  comments_every?: CommentWhereInput;
+  comments_some?: CommentWhereInput;
+  comments_none?: CommentWhereInput;
   favouriteMarks_every?: MusicMarkWhereInput;
   favouriteMarks_some?: MusicMarkWhereInput;
   favouriteMarks_none?: MusicMarkWhereInput;
@@ -548,6 +609,14 @@ export interface UserWhereInput {
   soundCloudToken_not_starts_with?: String;
   soundCloudToken_ends_with?: String;
   soundCloudToken_not_ends_with?: String;
+  lastLogin?: DateTimeInput;
+  lastLogin_not?: DateTimeInput;
+  lastLogin_in?: DateTimeInput[] | DateTimeInput;
+  lastLogin_not_in?: DateTimeInput[] | DateTimeInput;
+  lastLogin_lt?: DateTimeInput;
+  lastLogin_lte?: DateTimeInput;
+  lastLogin_gt?: DateTimeInput;
+  lastLogin_gte?: DateTimeInput;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -634,6 +703,42 @@ export interface HomeWhereInput {
   AND?: HomeWhereInput[] | HomeWhereInput;
   OR?: HomeWhereInput[] | HomeWhereInput;
   NOT?: HomeWhereInput[] | HomeWhereInput;
+}
+
+export interface CommentWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  musicMark?: MusicMarkWhereInput;
+  description?: String;
+  description_not?: String;
+  description_in?: String[] | String;
+  description_not_in?: String[] | String;
+  description_lt?: String;
+  description_lte?: String;
+  description_gt?: String;
+  description_gte?: String;
+  description_contains?: String;
+  description_not_contains?: String;
+  description_starts_with?: String;
+  description_not_starts_with?: String;
+  description_ends_with?: String;
+  description_not_ends_with?: String;
+  author?: UserWhereInput;
+  AND?: CommentWhereInput[] | CommentWhereInput;
+  OR?: CommentWhereInput[] | CommentWhereInput;
+  NOT?: CommentWhereInput[] | CommentWhereInput;
 }
 
 export interface MusicWhereInput {
@@ -738,6 +843,10 @@ export interface MusicWhereInput {
   NOT?: MusicWhereInput[] | MusicWhereInput;
 }
 
+export type HomeWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
 export type MusicWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
@@ -753,43 +862,19 @@ export type UserWhereUniqueInput = AtLeastOne<{
   phoneNumber?: String;
 }>;
 
-export interface HomeCreateInput {
-  user: UserCreateOneWithoutHomeLocationInput;
-  latitude: Float;
-  longitude: Float;
-  address?: String;
+export interface CommentCreateInput {
+  musicMark: MusicMarkCreateOneWithoutCommentsInput;
+  description: String;
+  author: UserCreateOneWithoutCommentsInput;
 }
 
-export interface UserCreateOneWithoutHomeLocationInput {
-  create?: UserCreateWithoutHomeLocationInput;
-  connect?: UserWhereUniqueInput;
+export interface MusicMarkCreateOneWithoutCommentsInput {
+  create?: MusicMarkCreateWithoutCommentsInput;
+  connect?: MusicMarkWhereUniqueInput;
 }
 
-export interface UserCreateWithoutHomeLocationInput {
-  username: String;
-  password: String;
-  email?: String;
-  isEmailActive?: Boolean;
-  phoneNumber?: String;
-  isPhoneNumberActive?: Boolean;
-  firstName?: String;
-  lastName?: String;
-  musicMarks?: MusicMarkCreateManyWithoutUserInput;
-  favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
-  likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
-  followings?: UserCreateManyWithoutFollowersInput;
-  followers?: UserCreateManyWithoutFollowingsInput;
-  friends?: UserCreateManyWithoutFriendsInput;
-  blockList?: UserCreateManyWithoutBlockListInput;
-  soundCloudToken?: String;
-}
-
-export interface MusicMarkCreateManyWithoutUserInput {
-  create?: MusicMarkCreateWithoutUserInput[] | MusicMarkCreateWithoutUserInput;
-  connect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-}
-
-export interface MusicMarkCreateWithoutUserInput {
+export interface MusicMarkCreateWithoutCommentsInput {
+  user: UserCreateOneWithoutMusicMarksInput;
   latitude: Float;
   longitude: Float;
   title?: String;
@@ -798,6 +883,72 @@ export interface MusicMarkCreateWithoutUserInput {
   spoiled?: Boolean;
   likedBy?: UserCreateManyWithoutLikedMarksInput;
   favouriteFor?: UserCreateManyWithoutFavouriteMarksInput;
+}
+
+export interface UserCreateOneWithoutMusicMarksInput {
+  create?: UserCreateWithoutMusicMarksInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserCreateWithoutMusicMarksInput {
+  username: String;
+  password: String;
+  email?: String;
+  isEmailActive?: Boolean;
+  phoneNumber?: String;
+  isPhoneNumberActive?: Boolean;
+  firstName?: String;
+  lastName?: String;
+  homeLocation?: HomeCreateOneWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
+  favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
+  likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
+  friends?: UserCreateManyWithoutFriendsInput;
+  blockList?: UserCreateManyWithoutBlockListInput;
+  soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
+}
+
+export interface HomeCreateOneWithoutUserInput {
+  create?: HomeCreateWithoutUserInput;
+  connect?: HomeWhereUniqueInput;
+}
+
+export interface HomeCreateWithoutUserInput {
+  latitude: Float;
+  longitude: Float;
+  address?: String;
+}
+
+export interface CommentCreateManyWithoutAuthorInput {
+  create?: CommentCreateWithoutAuthorInput[] | CommentCreateWithoutAuthorInput;
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+}
+
+export interface CommentCreateWithoutAuthorInput {
+  musicMark: MusicMarkCreateOneWithoutCommentsInput;
+  description: String;
+}
+
+export interface MusicMarkCreateManyWithoutFavouriteForInput {
+  create?:
+    | MusicMarkCreateWithoutFavouriteForInput[]
+    | MusicMarkCreateWithoutFavouriteForInput;
+  connect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
+}
+
+export interface MusicMarkCreateWithoutFavouriteForInput {
+  user: UserCreateOneWithoutMusicMarksInput;
+  latitude: Float;
+  longitude: Float;
+  title?: String;
+  description?: String;
+  musics?: MusicCreateManyWithoutMarksInput;
+  spoiled?: Boolean;
+  comments?: CommentCreateManyWithoutMusicMarkInput;
+  likedBy?: UserCreateManyWithoutLikedMarksInput;
 }
 
 export interface MusicCreateManyWithoutMarksInput {
@@ -830,6 +981,7 @@ export interface UserCreateInput {
   lastName?: String;
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
   followings?: UserCreateManyWithoutFollowersInput;
@@ -837,43 +989,44 @@ export interface UserCreateInput {
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
-export interface HomeCreateOneWithoutUserInput {
-  create?: HomeCreateWithoutUserInput;
-  connect?: HomeWhereUniqueInput;
-}
-
-export interface HomeCreateWithoutUserInput {
-  latitude: Float;
-  longitude: Float;
-  address?: String;
-}
-
-export interface MusicMarkCreateManyWithoutFavouriteForInput {
-  create?:
-    | MusicMarkCreateWithoutFavouriteForInput[]
-    | MusicMarkCreateWithoutFavouriteForInput;
+export interface MusicMarkCreateManyWithoutUserInput {
+  create?: MusicMarkCreateWithoutUserInput[] | MusicMarkCreateWithoutUserInput;
   connect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
 }
 
-export interface MusicMarkCreateWithoutFavouriteForInput {
-  user: UserCreateOneWithoutMusicMarksInput;
+export interface MusicMarkCreateWithoutUserInput {
   latitude: Float;
   longitude: Float;
   title?: String;
   description?: String;
   musics?: MusicCreateManyWithoutMarksInput;
   spoiled?: Boolean;
+  comments?: CommentCreateManyWithoutMusicMarkInput;
   likedBy?: UserCreateManyWithoutLikedMarksInput;
+  favouriteFor?: UserCreateManyWithoutFavouriteMarksInput;
 }
 
-export interface UserCreateOneWithoutMusicMarksInput {
-  create?: UserCreateWithoutMusicMarksInput;
+export interface CommentCreateManyWithoutMusicMarkInput {
+  create?:
+    | CommentCreateWithoutMusicMarkInput[]
+    | CommentCreateWithoutMusicMarkInput;
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+}
+
+export interface CommentCreateWithoutMusicMarkInput {
+  description: String;
+  author: UserCreateOneWithoutCommentsInput;
+}
+
+export interface UserCreateOneWithoutCommentsInput {
+  create?: UserCreateWithoutCommentsInput;
   connect?: UserWhereUniqueInput;
 }
 
-export interface UserCreateWithoutMusicMarksInput {
+export interface UserCreateWithoutCommentsInput {
   username: String;
   password: String;
   email?: String;
@@ -883,6 +1036,7 @@ export interface UserCreateWithoutMusicMarksInput {
   firstName?: String;
   lastName?: String;
   homeLocation?: HomeCreateOneWithoutUserInput;
+  musicMarks?: MusicMarkCreateManyWithoutUserInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
   followings?: UserCreateManyWithoutFollowersInput;
@@ -890,6 +1044,7 @@ export interface UserCreateWithoutMusicMarksInput {
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface MusicMarkCreateManyWithoutLikedByInput {
@@ -907,6 +1062,7 @@ export interface MusicMarkCreateWithoutLikedByInput {
   description?: String;
   musics?: MusicCreateManyWithoutMarksInput;
   spoiled?: Boolean;
+  comments?: CommentCreateManyWithoutMusicMarkInput;
   favouriteFor?: UserCreateManyWithoutFavouriteMarksInput;
 }
 
@@ -928,12 +1084,14 @@ export interface UserCreateWithoutFavouriteMarksInput {
   lastName?: String;
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
   followings?: UserCreateManyWithoutFollowersInput;
   followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserCreateManyWithoutFollowersInput {
@@ -952,12 +1110,14 @@ export interface UserCreateWithoutFollowersInput {
   lastName?: String;
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
   followings?: UserCreateManyWithoutFollowersInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserCreateManyWithoutFriendsInput {
@@ -976,12 +1136,14 @@ export interface UserCreateWithoutFriendsInput {
   lastName?: String;
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
   followings?: UserCreateManyWithoutFollowersInput;
   followers?: UserCreateManyWithoutFollowingsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserCreateManyWithoutFollowingsInput {
@@ -1002,12 +1164,14 @@ export interface UserCreateWithoutFollowingsInput {
   lastName?: String;
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
   followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserCreateManyWithoutBlockListInput {
@@ -1026,12 +1190,14 @@ export interface UserCreateWithoutBlockListInput {
   lastName?: String;
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
   followings?: UserCreateManyWithoutFollowersInput;
   followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserCreateManyWithoutLikedMarksInput {
@@ -1052,71 +1218,31 @@ export interface UserCreateWithoutLikedMarksInput {
   lastName?: String;
   homeLocation?: HomeCreateOneWithoutUserInput;
   musicMarks?: MusicMarkCreateManyWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
   followings?: UserCreateManyWithoutFollowersInput;
   followers?: UserCreateManyWithoutFollowingsInput;
   friends?: UserCreateManyWithoutFriendsInput;
   blockList?: UserCreateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
-export interface HomeUpdateInput {
-  user?: UserUpdateOneRequiredWithoutHomeLocationInput;
-  latitude?: Float;
-  longitude?: Float;
-  address?: String;
+export interface CommentUpdateInput {
+  musicMark?: MusicMarkUpdateOneRequiredWithoutCommentsInput;
+  description?: String;
+  author?: UserUpdateOneRequiredWithoutCommentsInput;
 }
 
-export interface UserUpdateOneRequiredWithoutHomeLocationInput {
-  create?: UserCreateWithoutHomeLocationInput;
-  update?: UserUpdateWithoutHomeLocationDataInput;
-  upsert?: UserUpsertWithoutHomeLocationInput;
-  connect?: UserWhereUniqueInput;
+export interface MusicMarkUpdateOneRequiredWithoutCommentsInput {
+  create?: MusicMarkCreateWithoutCommentsInput;
+  update?: MusicMarkUpdateWithoutCommentsDataInput;
+  upsert?: MusicMarkUpsertWithoutCommentsInput;
+  connect?: MusicMarkWhereUniqueInput;
 }
 
-export interface UserUpdateWithoutHomeLocationDataInput {
-  username?: String;
-  password?: String;
-  email?: String;
-  isEmailActive?: Boolean;
-  phoneNumber?: String;
-  isPhoneNumberActive?: Boolean;
-  firstName?: String;
-  lastName?: String;
-  musicMarks?: MusicMarkUpdateManyWithoutUserInput;
-  favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
-  likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
-  followings?: UserUpdateManyWithoutFollowersInput;
-  followers?: UserUpdateManyWithoutFollowingsInput;
-  friends?: UserUpdateManyWithoutFriendsInput;
-  blockList?: UserUpdateManyWithoutBlockListInput;
-  soundCloudToken?: String;
-}
-
-export interface MusicMarkUpdateManyWithoutUserInput {
-  create?: MusicMarkCreateWithoutUserInput[] | MusicMarkCreateWithoutUserInput;
-  delete?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-  connect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-  set?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-  disconnect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
-  update?:
-    | MusicMarkUpdateWithWhereUniqueWithoutUserInput[]
-    | MusicMarkUpdateWithWhereUniqueWithoutUserInput;
-  upsert?:
-    | MusicMarkUpsertWithWhereUniqueWithoutUserInput[]
-    | MusicMarkUpsertWithWhereUniqueWithoutUserInput;
-  deleteMany?: MusicMarkScalarWhereInput[] | MusicMarkScalarWhereInput;
-  updateMany?:
-    | MusicMarkUpdateManyWithWhereNestedInput[]
-    | MusicMarkUpdateManyWithWhereNestedInput;
-}
-
-export interface MusicMarkUpdateWithWhereUniqueWithoutUserInput {
-  where: MusicMarkWhereUniqueInput;
-  data: MusicMarkUpdateWithoutUserDataInput;
-}
-
-export interface MusicMarkUpdateWithoutUserDataInput {
+export interface MusicMarkUpdateWithoutCommentsDataInput {
+  user?: UserUpdateOneRequiredWithoutMusicMarksInput;
   latitude?: Float;
   longitude?: Float;
   title?: String;
@@ -1125,6 +1251,168 @@ export interface MusicMarkUpdateWithoutUserDataInput {
   spoiled?: Boolean;
   likedBy?: UserUpdateManyWithoutLikedMarksInput;
   favouriteFor?: UserUpdateManyWithoutFavouriteMarksInput;
+}
+
+export interface UserUpdateOneRequiredWithoutMusicMarksInput {
+  create?: UserCreateWithoutMusicMarksInput;
+  update?: UserUpdateWithoutMusicMarksDataInput;
+  upsert?: UserUpsertWithoutMusicMarksInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutMusicMarksDataInput {
+  username?: String;
+  password?: String;
+  email?: String;
+  isEmailActive?: Boolean;
+  phoneNumber?: String;
+  isPhoneNumberActive?: Boolean;
+  firstName?: String;
+  lastName?: String;
+  homeLocation?: HomeUpdateOneWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
+  favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
+  likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
+  friends?: UserUpdateManyWithoutFriendsInput;
+  blockList?: UserUpdateManyWithoutBlockListInput;
+  soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
+}
+
+export interface HomeUpdateOneWithoutUserInput {
+  create?: HomeCreateWithoutUserInput;
+  update?: HomeUpdateWithoutUserDataInput;
+  upsert?: HomeUpsertWithoutUserInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: HomeWhereUniqueInput;
+}
+
+export interface HomeUpdateWithoutUserDataInput {
+  latitude?: Float;
+  longitude?: Float;
+  address?: String;
+}
+
+export interface HomeUpsertWithoutUserInput {
+  update: HomeUpdateWithoutUserDataInput;
+  create: HomeCreateWithoutUserInput;
+}
+
+export interface CommentUpdateManyWithoutAuthorInput {
+  create?: CommentCreateWithoutAuthorInput[] | CommentCreateWithoutAuthorInput;
+  delete?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  set?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  disconnect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  update?:
+    | CommentUpdateWithWhereUniqueWithoutAuthorInput[]
+    | CommentUpdateWithWhereUniqueWithoutAuthorInput;
+  upsert?:
+    | CommentUpsertWithWhereUniqueWithoutAuthorInput[]
+    | CommentUpsertWithWhereUniqueWithoutAuthorInput;
+  deleteMany?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+  updateMany?:
+    | CommentUpdateManyWithWhereNestedInput[]
+    | CommentUpdateManyWithWhereNestedInput;
+}
+
+export interface CommentUpdateWithWhereUniqueWithoutAuthorInput {
+  where: CommentWhereUniqueInput;
+  data: CommentUpdateWithoutAuthorDataInput;
+}
+
+export interface CommentUpdateWithoutAuthorDataInput {
+  musicMark?: MusicMarkUpdateOneRequiredWithoutCommentsInput;
+  description?: String;
+}
+
+export interface CommentUpsertWithWhereUniqueWithoutAuthorInput {
+  where: CommentWhereUniqueInput;
+  update: CommentUpdateWithoutAuthorDataInput;
+  create: CommentCreateWithoutAuthorInput;
+}
+
+export interface CommentScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  description?: String;
+  description_not?: String;
+  description_in?: String[] | String;
+  description_not_in?: String[] | String;
+  description_lt?: String;
+  description_lte?: String;
+  description_gt?: String;
+  description_gte?: String;
+  description_contains?: String;
+  description_not_contains?: String;
+  description_starts_with?: String;
+  description_not_starts_with?: String;
+  description_ends_with?: String;
+  description_not_ends_with?: String;
+  AND?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+  OR?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+  NOT?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+}
+
+export interface CommentUpdateManyWithWhereNestedInput {
+  where: CommentScalarWhereInput;
+  data: CommentUpdateManyDataInput;
+}
+
+export interface CommentUpdateManyDataInput {
+  description?: String;
+}
+
+export interface MusicMarkUpdateManyWithoutFavouriteForInput {
+  create?:
+    | MusicMarkCreateWithoutFavouriteForInput[]
+    | MusicMarkCreateWithoutFavouriteForInput;
+  delete?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
+  connect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
+  set?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
+  disconnect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
+  update?:
+    | MusicMarkUpdateWithWhereUniqueWithoutFavouriteForInput[]
+    | MusicMarkUpdateWithWhereUniqueWithoutFavouriteForInput;
+  upsert?:
+    | MusicMarkUpsertWithWhereUniqueWithoutFavouriteForInput[]
+    | MusicMarkUpsertWithWhereUniqueWithoutFavouriteForInput;
+  deleteMany?: MusicMarkScalarWhereInput[] | MusicMarkScalarWhereInput;
+  updateMany?:
+    | MusicMarkUpdateManyWithWhereNestedInput[]
+    | MusicMarkUpdateManyWithWhereNestedInput;
+}
+
+export interface MusicMarkUpdateWithWhereUniqueWithoutFavouriteForInput {
+  where: MusicMarkWhereUniqueInput;
+  data: MusicMarkUpdateWithoutFavouriteForDataInput;
+}
+
+export interface MusicMarkUpdateWithoutFavouriteForDataInput {
+  user?: UserUpdateOneRequiredWithoutMusicMarksInput;
+  latitude?: Float;
+  longitude?: Float;
+  title?: String;
+  description?: String;
+  musics?: MusicUpdateManyWithoutMarksInput;
+  spoiled?: Boolean;
+  comments?: CommentUpdateManyWithoutMusicMarkInput;
+  likedBy?: UserUpdateManyWithoutLikedMarksInput;
 }
 
 export interface MusicUpdateManyWithoutMarksInput {
@@ -1177,6 +1465,7 @@ export interface UserUpdateDataInput {
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
   followings?: UserUpdateManyWithoutFollowersInput;
@@ -1184,72 +1473,82 @@ export interface UserUpdateDataInput {
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
-export interface HomeUpdateOneWithoutUserInput {
-  create?: HomeCreateWithoutUserInput;
-  update?: HomeUpdateWithoutUserDataInput;
-  upsert?: HomeUpsertWithoutUserInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: HomeWhereUniqueInput;
-}
-
-export interface HomeUpdateWithoutUserDataInput {
-  latitude?: Float;
-  longitude?: Float;
-  address?: String;
-}
-
-export interface HomeUpsertWithoutUserInput {
-  update: HomeUpdateWithoutUserDataInput;
-  create: HomeCreateWithoutUserInput;
-}
-
-export interface MusicMarkUpdateManyWithoutFavouriteForInput {
-  create?:
-    | MusicMarkCreateWithoutFavouriteForInput[]
-    | MusicMarkCreateWithoutFavouriteForInput;
+export interface MusicMarkUpdateManyWithoutUserInput {
+  create?: MusicMarkCreateWithoutUserInput[] | MusicMarkCreateWithoutUserInput;
   delete?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
   connect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
   set?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
   disconnect?: MusicMarkWhereUniqueInput[] | MusicMarkWhereUniqueInput;
   update?:
-    | MusicMarkUpdateWithWhereUniqueWithoutFavouriteForInput[]
-    | MusicMarkUpdateWithWhereUniqueWithoutFavouriteForInput;
+    | MusicMarkUpdateWithWhereUniqueWithoutUserInput[]
+    | MusicMarkUpdateWithWhereUniqueWithoutUserInput;
   upsert?:
-    | MusicMarkUpsertWithWhereUniqueWithoutFavouriteForInput[]
-    | MusicMarkUpsertWithWhereUniqueWithoutFavouriteForInput;
+    | MusicMarkUpsertWithWhereUniqueWithoutUserInput[]
+    | MusicMarkUpsertWithWhereUniqueWithoutUserInput;
   deleteMany?: MusicMarkScalarWhereInput[] | MusicMarkScalarWhereInput;
   updateMany?:
     | MusicMarkUpdateManyWithWhereNestedInput[]
     | MusicMarkUpdateManyWithWhereNestedInput;
 }
 
-export interface MusicMarkUpdateWithWhereUniqueWithoutFavouriteForInput {
+export interface MusicMarkUpdateWithWhereUniqueWithoutUserInput {
   where: MusicMarkWhereUniqueInput;
-  data: MusicMarkUpdateWithoutFavouriteForDataInput;
+  data: MusicMarkUpdateWithoutUserDataInput;
 }
 
-export interface MusicMarkUpdateWithoutFavouriteForDataInput {
-  user?: UserUpdateOneRequiredWithoutMusicMarksInput;
+export interface MusicMarkUpdateWithoutUserDataInput {
   latitude?: Float;
   longitude?: Float;
   title?: String;
   description?: String;
   musics?: MusicUpdateManyWithoutMarksInput;
   spoiled?: Boolean;
+  comments?: CommentUpdateManyWithoutMusicMarkInput;
   likedBy?: UserUpdateManyWithoutLikedMarksInput;
+  favouriteFor?: UserUpdateManyWithoutFavouriteMarksInput;
 }
 
-export interface UserUpdateOneRequiredWithoutMusicMarksInput {
-  create?: UserCreateWithoutMusicMarksInput;
-  update?: UserUpdateWithoutMusicMarksDataInput;
-  upsert?: UserUpsertWithoutMusicMarksInput;
+export interface CommentUpdateManyWithoutMusicMarkInput {
+  create?:
+    | CommentCreateWithoutMusicMarkInput[]
+    | CommentCreateWithoutMusicMarkInput;
+  delete?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  set?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  disconnect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  update?:
+    | CommentUpdateWithWhereUniqueWithoutMusicMarkInput[]
+    | CommentUpdateWithWhereUniqueWithoutMusicMarkInput;
+  upsert?:
+    | CommentUpsertWithWhereUniqueWithoutMusicMarkInput[]
+    | CommentUpsertWithWhereUniqueWithoutMusicMarkInput;
+  deleteMany?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+  updateMany?:
+    | CommentUpdateManyWithWhereNestedInput[]
+    | CommentUpdateManyWithWhereNestedInput;
+}
+
+export interface CommentUpdateWithWhereUniqueWithoutMusicMarkInput {
+  where: CommentWhereUniqueInput;
+  data: CommentUpdateWithoutMusicMarkDataInput;
+}
+
+export interface CommentUpdateWithoutMusicMarkDataInput {
+  description?: String;
+  author?: UserUpdateOneRequiredWithoutCommentsInput;
+}
+
+export interface UserUpdateOneRequiredWithoutCommentsInput {
+  create?: UserCreateWithoutCommentsInput;
+  update?: UserUpdateWithoutCommentsDataInput;
+  upsert?: UserUpsertWithoutCommentsInput;
   connect?: UserWhereUniqueInput;
 }
 
-export interface UserUpdateWithoutMusicMarksDataInput {
+export interface UserUpdateWithoutCommentsDataInput {
   username?: String;
   password?: String;
   email?: String;
@@ -1259,6 +1558,7 @@ export interface UserUpdateWithoutMusicMarksDataInput {
   firstName?: String;
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
+  musicMarks?: MusicMarkUpdateManyWithoutUserInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
   followings?: UserUpdateManyWithoutFollowersInput;
@@ -1266,6 +1566,7 @@ export interface UserUpdateWithoutMusicMarksDataInput {
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface MusicMarkUpdateManyWithoutLikedByInput {
@@ -1301,6 +1602,7 @@ export interface MusicMarkUpdateWithoutLikedByDataInput {
   description?: String;
   musics?: MusicUpdateManyWithoutMarksInput;
   spoiled?: Boolean;
+  comments?: CommentUpdateManyWithoutMusicMarkInput;
   favouriteFor?: UserUpdateManyWithoutFavouriteMarksInput;
 }
 
@@ -1340,12 +1642,14 @@ export interface UserUpdateWithoutFavouriteMarksDataInput {
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
   followings?: UserUpdateManyWithoutFollowersInput;
   followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpdateManyWithoutFollowersInput {
@@ -1382,12 +1686,14 @@ export interface UserUpdateWithoutFollowersDataInput {
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
   followings?: UserUpdateManyWithoutFollowersInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpdateManyWithoutFriendsInput {
@@ -1424,12 +1730,14 @@ export interface UserUpdateWithoutFriendsDataInput {
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
   followings?: UserUpdateManyWithoutFollowersInput;
   followers?: UserUpdateManyWithoutFollowingsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpdateManyWithoutFollowingsInput {
@@ -1468,12 +1776,14 @@ export interface UserUpdateWithoutFollowingsDataInput {
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
   followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpdateManyWithoutBlockListInput {
@@ -1510,12 +1820,14 @@ export interface UserUpdateWithoutBlockListDataInput {
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
   followings?: UserUpdateManyWithoutFollowersInput;
   followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutBlockListInput {
@@ -1641,6 +1953,14 @@ export interface UserScalarWhereInput {
   soundCloudToken_not_starts_with?: String;
   soundCloudToken_ends_with?: String;
   soundCloudToken_not_ends_with?: String;
+  lastLogin?: DateTimeInput;
+  lastLogin_not?: DateTimeInput;
+  lastLogin_in?: DateTimeInput[] | DateTimeInput;
+  lastLogin_not_in?: DateTimeInput[] | DateTimeInput;
+  lastLogin_lt?: DateTimeInput;
+  lastLogin_lte?: DateTimeInput;
+  lastLogin_gt?: DateTimeInput;
+  lastLogin_gte?: DateTimeInput;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -1677,6 +1997,7 @@ export interface UserUpdateManyDataInput {
   firstName?: String;
   lastName?: String;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutFollowingsInput {
@@ -1804,9 +2125,15 @@ export interface MusicMarkUpdateManyDataInput {
   spoiled?: Boolean;
 }
 
-export interface UserUpsertWithoutMusicMarksInput {
-  update: UserUpdateWithoutMusicMarksDataInput;
-  create: UserCreateWithoutMusicMarksInput;
+export interface UserUpsertWithoutCommentsInput {
+  update: UserUpdateWithoutCommentsDataInput;
+  create: UserCreateWithoutCommentsInput;
+}
+
+export interface CommentUpsertWithWhereUniqueWithoutMusicMarkInput {
+  where: CommentWhereUniqueInput;
+  update: CommentUpdateWithoutMusicMarkDataInput;
+  create: CommentCreateWithoutMusicMarkInput;
 }
 
 export interface UserUpdateManyWithoutLikedMarksInput {
@@ -1845,12 +2172,14 @@ export interface UserUpdateWithoutLikedMarksDataInput {
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   followings?: UserUpdateManyWithoutFollowersInput;
   followers?: UserUpdateManyWithoutFollowingsInput;
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutLikedMarksInput {
@@ -1859,10 +2188,10 @@ export interface UserUpsertWithWhereUniqueWithoutLikedMarksInput {
   create: UserCreateWithoutLikedMarksInput;
 }
 
-export interface MusicMarkUpsertWithWhereUniqueWithoutFavouriteForInput {
+export interface MusicMarkUpsertWithWhereUniqueWithoutUserInput {
   where: MusicMarkWhereUniqueInput;
-  update: MusicMarkUpdateWithoutFavouriteForDataInput;
-  create: MusicMarkCreateWithoutFavouriteForInput;
+  update: MusicMarkUpdateWithoutUserDataInput;
+  create: MusicMarkCreateWithoutUserInput;
 }
 
 export interface UserUpsertNestedInput {
@@ -1989,10 +2318,92 @@ export interface MusicUpdateManyDataInput {
   uri?: String;
 }
 
-export interface MusicMarkUpsertWithWhereUniqueWithoutUserInput {
+export interface MusicMarkUpsertWithWhereUniqueWithoutFavouriteForInput {
   where: MusicMarkWhereUniqueInput;
-  update: MusicMarkUpdateWithoutUserDataInput;
-  create: MusicMarkCreateWithoutUserInput;
+  update: MusicMarkUpdateWithoutFavouriteForDataInput;
+  create: MusicMarkCreateWithoutFavouriteForInput;
+}
+
+export interface UserUpsertWithoutMusicMarksInput {
+  update: UserUpdateWithoutMusicMarksDataInput;
+  create: UserCreateWithoutMusicMarksInput;
+}
+
+export interface MusicMarkUpsertWithoutCommentsInput {
+  update: MusicMarkUpdateWithoutCommentsDataInput;
+  create: MusicMarkCreateWithoutCommentsInput;
+}
+
+export interface CommentUpdateManyMutationInput {
+  description?: String;
+}
+
+export interface HomeCreateInput {
+  user: UserCreateOneWithoutHomeLocationInput;
+  latitude: Float;
+  longitude: Float;
+  address?: String;
+}
+
+export interface UserCreateOneWithoutHomeLocationInput {
+  create?: UserCreateWithoutHomeLocationInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserCreateWithoutHomeLocationInput {
+  username: String;
+  password: String;
+  email?: String;
+  isEmailActive?: Boolean;
+  phoneNumber?: String;
+  isPhoneNumberActive?: Boolean;
+  firstName?: String;
+  lastName?: String;
+  musicMarks?: MusicMarkCreateManyWithoutUserInput;
+  comments?: CommentCreateManyWithoutAuthorInput;
+  favouriteMarks?: MusicMarkCreateManyWithoutFavouriteForInput;
+  likedMarks?: MusicMarkCreateManyWithoutLikedByInput;
+  followings?: UserCreateManyWithoutFollowersInput;
+  followers?: UserCreateManyWithoutFollowingsInput;
+  friends?: UserCreateManyWithoutFriendsInput;
+  blockList?: UserCreateManyWithoutBlockListInput;
+  soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
+}
+
+export interface HomeUpdateInput {
+  user?: UserUpdateOneRequiredWithoutHomeLocationInput;
+  latitude?: Float;
+  longitude?: Float;
+  address?: String;
+}
+
+export interface UserUpdateOneRequiredWithoutHomeLocationInput {
+  create?: UserCreateWithoutHomeLocationInput;
+  update?: UserUpdateWithoutHomeLocationDataInput;
+  upsert?: UserUpsertWithoutHomeLocationInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutHomeLocationDataInput {
+  username?: String;
+  password?: String;
+  email?: String;
+  isEmailActive?: Boolean;
+  phoneNumber?: String;
+  isPhoneNumberActive?: Boolean;
+  firstName?: String;
+  lastName?: String;
+  musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
+  favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
+  likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
+  followings?: UserUpdateManyWithoutFollowersInput;
+  followers?: UserUpdateManyWithoutFollowingsInput;
+  friends?: UserUpdateManyWithoutFriendsInput;
+  blockList?: UserUpdateManyWithoutBlockListInput;
+  soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpsertWithoutHomeLocationInput {
@@ -2028,6 +2439,7 @@ export interface MusicMarkCreateWithoutMusicsInput {
   title?: String;
   description?: String;
   spoiled?: Boolean;
+  comments?: CommentCreateManyWithoutMusicMarkInput;
   likedBy?: UserCreateManyWithoutLikedMarksInput;
   favouriteFor?: UserCreateManyWithoutFavouriteMarksInput;
 }
@@ -2056,6 +2468,7 @@ export interface MusicMarkUpdateWithoutMusicsDataInput {
   title?: String;
   description?: String;
   spoiled?: Boolean;
+  comments?: CommentUpdateManyWithoutMusicMarkInput;
   likedBy?: UserUpdateManyWithoutLikedMarksInput;
   favouriteFor?: UserUpdateManyWithoutFavouriteMarksInput;
 }
@@ -2081,6 +2494,7 @@ export interface MusicMarkCreateInput {
   description?: String;
   musics?: MusicCreateManyWithoutMarksInput;
   spoiled?: Boolean;
+  comments?: CommentCreateManyWithoutMusicMarkInput;
   likedBy?: UserCreateManyWithoutLikedMarksInput;
   favouriteFor?: UserCreateManyWithoutFavouriteMarksInput;
 }
@@ -2093,6 +2507,7 @@ export interface MusicMarkUpdateInput {
   description?: String;
   musics?: MusicUpdateManyWithoutMarksInput;
   spoiled?: Boolean;
+  comments?: CommentUpdateManyWithoutMusicMarkInput;
   likedBy?: UserUpdateManyWithoutLikedMarksInput;
   favouriteFor?: UserUpdateManyWithoutFavouriteMarksInput;
 }
@@ -2116,6 +2531,7 @@ export interface UserUpdateInput {
   lastName?: String;
   homeLocation?: HomeUpdateOneWithoutUserInput;
   musicMarks?: MusicMarkUpdateManyWithoutUserInput;
+  comments?: CommentUpdateManyWithoutAuthorInput;
   favouriteMarks?: MusicMarkUpdateManyWithoutFavouriteForInput;
   likedMarks?: MusicMarkUpdateManyWithoutLikedByInput;
   followings?: UserUpdateManyWithoutFollowersInput;
@@ -2123,6 +2539,7 @@ export interface UserUpdateInput {
   friends?: UserUpdateManyWithoutFriendsInput;
   blockList?: UserUpdateManyWithoutBlockListInput;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -2135,6 +2552,18 @@ export interface UserUpdateManyMutationInput {
   firstName?: String;
   lastName?: String;
   soundCloudToken?: String;
+  lastLogin?: DateTimeInput;
+}
+
+export interface CommentSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: CommentWhereInput;
+  AND?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput;
+  OR?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput;
+  NOT?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput;
 }
 
 export interface HomeSubscriptionWhereInput {
@@ -2185,33 +2614,148 @@ export interface NodeNode {
   id: ID_Output;
 }
 
-export interface Home {
+export interface Comment {
+  id: ID_Output;
+  description: String;
+}
+
+export interface CommentPromise extends Promise<Comment>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  musicMark: <T = MusicMarkPromise>() => T;
+  description: () => Promise<String>;
+  author: <T = UserPromise>() => T;
+}
+
+export interface CommentSubscription
+  extends Promise<AsyncIterator<Comment>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  musicMark: <T = MusicMarkSubscription>() => T;
+  description: () => Promise<AsyncIterator<String>>;
+  author: <T = UserSubscription>() => T;
+}
+
+export interface MusicMark {
   id: ID_Output;
   latitude: Float;
   longitude: Float;
-  address?: String;
+  title?: String;
+  description?: String;
+  spoiled: Boolean;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
 
-export interface HomePromise extends Promise<Home>, Fragmentable {
+export interface MusicMarkPromise extends Promise<MusicMark>, Fragmentable {
   id: () => Promise<ID_Output>;
   user: <T = UserPromise>() => T;
   latitude: () => Promise<Float>;
   longitude: () => Promise<Float>;
-  address: () => Promise<String>;
+  title: () => Promise<String>;
+  description: () => Promise<String>;
+  musics: <T = FragmentableArray<Music>>(
+    args?: {
+      where?: MusicWhereInput;
+      orderBy?: MusicOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  spoiled: () => Promise<Boolean>;
+  comments: <T = FragmentableArray<Comment>>(
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  likedBy: <T = FragmentableArray<User>>(
+    args?: {
+      where?: UserWhereInput;
+      orderBy?: UserOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  favouriteFor: <T = FragmentableArray<User>>(
+    args?: {
+      where?: UserWhereInput;
+      orderBy?: UserOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface HomeSubscription
-  extends Promise<AsyncIterator<Home>>,
+export interface MusicMarkSubscription
+  extends Promise<AsyncIterator<MusicMark>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   user: <T = UserSubscription>() => T;
   latitude: () => Promise<AsyncIterator<Float>>;
   longitude: () => Promise<AsyncIterator<Float>>;
-  address: () => Promise<AsyncIterator<String>>;
+  title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  musics: <T = Promise<AsyncIterator<MusicSubscription>>>(
+    args?: {
+      where?: MusicWhereInput;
+      orderBy?: MusicOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  spoiled: () => Promise<AsyncIterator<Boolean>>;
+  comments: <T = Promise<AsyncIterator<CommentSubscription>>>(
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  likedBy: <T = Promise<AsyncIterator<UserSubscription>>>(
+    args?: {
+      where?: UserWhereInput;
+      orderBy?: UserOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  favouriteFor: <T = Promise<AsyncIterator<UserSubscription>>>(
+    args?: {
+      where?: UserWhereInput;
+      orderBy?: UserOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -2227,6 +2771,7 @@ export interface User {
   firstName?: String;
   lastName?: String;
   soundCloudToken?: String;
+  lastLogin?: DateTimeOutput;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -2246,6 +2791,17 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     args?: {
       where?: MusicMarkWhereInput;
       orderBy?: MusicMarkOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  comments: <T = FragmentableArray<Comment>>(
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -2320,6 +2876,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     }
   ) => T;
   soundCloudToken: () => Promise<String>;
+  lastLogin: () => Promise<DateTimeOutput>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -2341,6 +2898,17 @@ export interface UserSubscription
     args?: {
       where?: MusicMarkWhereInput;
       orderBy?: MusicMarkOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  comments: <T = Promise<AsyncIterator<CommentSubscription>>>(
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -2415,109 +2983,38 @@ export interface UserSubscription
     }
   ) => T;
   soundCloudToken: () => Promise<AsyncIterator<String>>;
+  lastLogin: () => Promise<AsyncIterator<DateTimeOutput>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface MusicMark {
+export interface Home {
   id: ID_Output;
   latitude: Float;
   longitude: Float;
-  title?: String;
-  description?: String;
-  spoiled: Boolean;
+  address?: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
 
-export interface MusicMarkPromise extends Promise<MusicMark>, Fragmentable {
+export interface HomePromise extends Promise<Home>, Fragmentable {
   id: () => Promise<ID_Output>;
   user: <T = UserPromise>() => T;
   latitude: () => Promise<Float>;
   longitude: () => Promise<Float>;
-  title: () => Promise<String>;
-  description: () => Promise<String>;
-  musics: <T = FragmentableArray<Music>>(
-    args?: {
-      where?: MusicWhereInput;
-      orderBy?: MusicOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  spoiled: () => Promise<Boolean>;
-  likedBy: <T = FragmentableArray<User>>(
-    args?: {
-      where?: UserWhereInput;
-      orderBy?: UserOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  favouriteFor: <T = FragmentableArray<User>>(
-    args?: {
-      where?: UserWhereInput;
-      orderBy?: UserOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
+  address: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface MusicMarkSubscription
-  extends Promise<AsyncIterator<MusicMark>>,
+export interface HomeSubscription
+  extends Promise<AsyncIterator<Home>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   user: <T = UserSubscription>() => T;
   latitude: () => Promise<AsyncIterator<Float>>;
   longitude: () => Promise<AsyncIterator<Float>>;
-  title: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  musics: <T = Promise<AsyncIterator<MusicSubscription>>>(
-    args?: {
-      where?: MusicWhereInput;
-      orderBy?: MusicOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  spoiled: () => Promise<AsyncIterator<Boolean>>;
-  likedBy: <T = Promise<AsyncIterator<UserSubscription>>>(
-    args?: {
-      where?: UserWhereInput;
-      orderBy?: UserOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  favouriteFor: <T = Promise<AsyncIterator<UserSubscription>>>(
-    args?: {
-      where?: UserWhereInput;
-      orderBy?: UserOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
+  address: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -2561,25 +3058,25 @@ export interface MusicSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface HomeConnection {
+export interface CommentConnection {
   pageInfo: PageInfo;
-  edges: HomeEdge[];
+  edges: CommentEdge[];
 }
 
-export interface HomeConnectionPromise
-  extends Promise<HomeConnection>,
+export interface CommentConnectionPromise
+  extends Promise<CommentConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<HomeEdge>>() => T;
-  aggregate: <T = AggregateHomePromise>() => T;
+  edges: <T = FragmentableArray<CommentEdge>>() => T;
+  aggregate: <T = AggregateCommentPromise>() => T;
 }
 
-export interface HomeConnectionSubscription
-  extends Promise<AsyncIterator<HomeConnection>>,
+export interface CommentConnectionSubscription
+  extends Promise<AsyncIterator<CommentConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<HomeEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateHomeSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CommentEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCommentSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -2603,6 +3100,60 @@ export interface PageInfoSubscription
   hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
   startCursor: () => Promise<AsyncIterator<String>>;
   endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface CommentEdge {
+  node: Comment;
+  cursor: String;
+}
+
+export interface CommentEdgePromise extends Promise<CommentEdge>, Fragmentable {
+  node: <T = CommentPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CommentEdgeSubscription
+  extends Promise<AsyncIterator<CommentEdge>>,
+    Fragmentable {
+  node: <T = CommentSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateComment {
+  count: Int;
+}
+
+export interface AggregateCommentPromise
+  extends Promise<AggregateComment>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCommentSubscription
+  extends Promise<AsyncIterator<AggregateComment>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface HomeConnection {
+  pageInfo: PageInfo;
+  edges: HomeEdge[];
+}
+
+export interface HomeConnectionPromise
+  extends Promise<HomeConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<HomeEdge>>() => T;
+  aggregate: <T = AggregateHomePromise>() => T;
+}
+
+export interface HomeConnectionSubscription
+  extends Promise<AsyncIterator<HomeConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<HomeEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateHomeSubscription>() => T;
 }
 
 export interface HomeEdge {
@@ -2816,6 +3367,50 @@ export interface BatchPayloadSubscription
   extends Promise<AsyncIterator<BatchPayload>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface CommentSubscriptionPayload {
+  mutation: MutationType;
+  node: Comment;
+  updatedFields: String[];
+  previousValues: CommentPreviousValues;
+}
+
+export interface CommentSubscriptionPayloadPromise
+  extends Promise<CommentSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = CommentPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = CommentPreviousValuesPromise>() => T;
+}
+
+export interface CommentSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<CommentSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = CommentSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = CommentPreviousValuesSubscription>() => T;
+}
+
+export interface CommentPreviousValues {
+  id: ID_Output;
+  description: String;
+}
+
+export interface CommentPreviousValuesPromise
+  extends Promise<CommentPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  description: () => Promise<String>;
+}
+
+export interface CommentPreviousValuesSubscription
+  extends Promise<AsyncIterator<CommentPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  description: () => Promise<AsyncIterator<String>>;
 }
 
 export interface HomeSubscriptionPayload {
@@ -3034,6 +3629,7 @@ export interface UserPreviousValues {
   firstName?: String;
   lastName?: String;
   soundCloudToken?: String;
+  lastLogin?: DateTimeOutput;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -3051,6 +3647,7 @@ export interface UserPreviousValuesPromise
   firstName: () => Promise<String>;
   lastName: () => Promise<String>;
   soundCloudToken: () => Promise<String>;
+  lastLogin: () => Promise<DateTimeOutput>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -3068,6 +3665,7 @@ export interface UserPreviousValuesSubscription
   firstName: () => Promise<AsyncIterator<String>>;
   lastName: () => Promise<AsyncIterator<String>>;
   soundCloudToken: () => Promise<AsyncIterator<String>>;
+  lastLogin: () => Promise<AsyncIterator<DateTimeOutput>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -3129,6 +3727,10 @@ export const models: Model[] = [
   },
   {
     name: "MusicMark",
+    embedded: false
+  },
+  {
+    name: "Comment",
     embedded: false
   }
 ];

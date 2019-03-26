@@ -26,11 +26,15 @@ type Mutation {
     createMusicMark(latitude: Float!, longitude: Float!, title: String, description: String, musics: [MusicInput!]!): MusicMark
     updateMusicMark(musicMarkId: ID!, latitude: Float, longitude: Float, title: String, description: String): MusicMark
     deleteMusicMark(musicMarkId: ID!): MusicMark
+    addComment(musicMarkId: ID!, description: String!): Comment!
     createMusic(musicMarkId: ID!, musics: [MusicInput!]!): MusicMark
     updateMusic(musicId: ID!, uri: String!, title: String, description: String): Music
     deleteMusic(musicId: ID!): Music
     likeMusicMark(musicMarkId: ID!): MusicMark
+    dislikeMusicMark(musicMarkId: ID!): MusicMark
     favouriteMusicMark(musicMarkId: ID!): MusicMark
+    unfavoriteMusicMark(musicMarkId: ID!): MusicMark
+
 }
 
 type AuthPayload {
@@ -50,12 +54,13 @@ type User {
     lastName: String
     homeLocation: Home
     musicMarks: [MusicMark!]!
+    comments: [Comment!]!
     likedMarks: [MusicMark!]!
     followings: [User!]!
     followers: [User!]!
     friends: [User!]!
     blockList: [User!]!
-#    lastLogin: DateTime
+    lastLogin: DateTime
     soundCloudToken: String
     createdAt: DateTime!
     updatedAt: DateTime!
@@ -92,10 +97,18 @@ type MusicMark {
     title: String
     description: String
     musics: [Music!]!
+    comments: [Comment!]!
     likedBy: [User!]!
     favouriteFor: [User!]!
     createdAt: DateTime!
     updatedAt: DateTime!
+}
+
+type Comment {
+    id: ID!
+    musicMark: MusicMark!
+    description: String!
+    author: User!
 }
 
 input MusicMarkInput {

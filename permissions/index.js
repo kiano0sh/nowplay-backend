@@ -54,11 +54,14 @@ const permissions = shield({
         createMusicMark: rules.isAuthenticatedUser,
         updateMusicMark: rules.isMusicMarker,
         deleteMusicMark: rules.isMusicMarker,
+        addComment: rules.isAuthenticatedUser,
         createMusic: rules.isAuthenticatedUser,
         updateMusic: rules.isMusicOwner,
         deleteMusic: rules.isMusicOwner,
         likeMusicMark: rules.isAuthenticatedUser,
+        dislikeMusicMark: rules.isAuthenticatedUser,
         favouriteMusicMark: rules.isAuthenticatedUser,
+        unfavoriteMusicMark: rules.isAuthenticatedUser,
     },
 });
 

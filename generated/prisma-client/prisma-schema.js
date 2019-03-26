@@ -3,7 +3,11 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateHome {
+/* GraphQL */ `type AggregateComment {
+  count: Int!
+}
+
+type AggregateHome {
   count: Int!
 }
 
@@ -21,6 +25,233 @@ type AggregateUser {
 
 type BatchPayload {
   count: Long!
+}
+
+type Comment {
+  id: ID!
+  musicMark: MusicMark!
+  description: String!
+  author: User!
+}
+
+type CommentConnection {
+  pageInfo: PageInfo!
+  edges: [CommentEdge]!
+  aggregate: AggregateComment!
+}
+
+input CommentCreateInput {
+  musicMark: MusicMarkCreateOneWithoutCommentsInput!
+  description: String!
+  author: UserCreateOneWithoutCommentsInput!
+}
+
+input CommentCreateManyWithoutAuthorInput {
+  create: [CommentCreateWithoutAuthorInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateManyWithoutMusicMarkInput {
+  create: [CommentCreateWithoutMusicMarkInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateWithoutAuthorInput {
+  musicMark: MusicMarkCreateOneWithoutCommentsInput!
+  description: String!
+}
+
+input CommentCreateWithoutMusicMarkInput {
+  description: String!
+  author: UserCreateOneWithoutCommentsInput!
+}
+
+type CommentEdge {
+  node: Comment!
+  cursor: String!
+}
+
+enum CommentOrderByInput {
+  id_ASC
+  id_DESC
+  description_ASC
+  description_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type CommentPreviousValues {
+  id: ID!
+  description: String!
+}
+
+input CommentScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  AND: [CommentScalarWhereInput!]
+  OR: [CommentScalarWhereInput!]
+  NOT: [CommentScalarWhereInput!]
+}
+
+type CommentSubscriptionPayload {
+  mutation: MutationType!
+  node: Comment
+  updatedFields: [String!]
+  previousValues: CommentPreviousValues
+}
+
+input CommentSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CommentWhereInput
+  AND: [CommentSubscriptionWhereInput!]
+  OR: [CommentSubscriptionWhereInput!]
+  NOT: [CommentSubscriptionWhereInput!]
+}
+
+input CommentUpdateInput {
+  musicMark: MusicMarkUpdateOneRequiredWithoutCommentsInput
+  description: String
+  author: UserUpdateOneRequiredWithoutCommentsInput
+}
+
+input CommentUpdateManyDataInput {
+  description: String
+}
+
+input CommentUpdateManyMutationInput {
+  description: String
+}
+
+input CommentUpdateManyWithoutAuthorInput {
+  create: [CommentCreateWithoutAuthorInput!]
+  delete: [CommentWhereUniqueInput!]
+  connect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutAuthorInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutAuthorInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  updateMany: [CommentUpdateManyWithWhereNestedInput!]
+}
+
+input CommentUpdateManyWithoutMusicMarkInput {
+  create: [CommentCreateWithoutMusicMarkInput!]
+  delete: [CommentWhereUniqueInput!]
+  connect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutMusicMarkInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutMusicMarkInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  updateMany: [CommentUpdateManyWithWhereNestedInput!]
+}
+
+input CommentUpdateManyWithWhereNestedInput {
+  where: CommentScalarWhereInput!
+  data: CommentUpdateManyDataInput!
+}
+
+input CommentUpdateWithoutAuthorDataInput {
+  musicMark: MusicMarkUpdateOneRequiredWithoutCommentsInput
+  description: String
+}
+
+input CommentUpdateWithoutMusicMarkDataInput {
+  description: String
+  author: UserUpdateOneRequiredWithoutCommentsInput
+}
+
+input CommentUpdateWithWhereUniqueWithoutAuthorInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutAuthorDataInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutMusicMarkInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutMusicMarkDataInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutAuthorInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutAuthorDataInput!
+  create: CommentCreateWithoutAuthorInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutMusicMarkInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutMusicMarkDataInput!
+  create: CommentCreateWithoutMusicMarkInput!
+}
+
+input CommentWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  musicMark: MusicMarkWhereInput
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  author: UserWhereInput
+  AND: [CommentWhereInput!]
+  OR: [CommentWhereInput!]
+  NOT: [CommentWhereInput!]
+}
+
+input CommentWhereUniqueInput {
+  id: ID
 }
 
 scalar DateTime
@@ -269,6 +500,7 @@ type MusicMark {
   description: String
   musics(where: MusicWhereInput, orderBy: MusicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Music!]
   spoiled: Boolean!
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   likedBy(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   favouriteFor(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   createdAt: DateTime!
@@ -289,6 +521,7 @@ input MusicMarkCreateInput {
   description: String
   musics: MusicCreateManyWithoutMarksInput
   spoiled: Boolean
+  comments: CommentCreateManyWithoutMusicMarkInput
   likedBy: UserCreateManyWithoutLikedMarksInput
   favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
@@ -308,9 +541,26 @@ input MusicMarkCreateManyWithoutUserInput {
   connect: [MusicMarkWhereUniqueInput!]
 }
 
+input MusicMarkCreateOneWithoutCommentsInput {
+  create: MusicMarkCreateWithoutCommentsInput
+  connect: MusicMarkWhereUniqueInput
+}
+
 input MusicMarkCreateOneWithoutMusicsInput {
   create: MusicMarkCreateWithoutMusicsInput
   connect: MusicMarkWhereUniqueInput
+}
+
+input MusicMarkCreateWithoutCommentsInput {
+  user: UserCreateOneWithoutMusicMarksInput!
+  latitude: Float!
+  longitude: Float!
+  title: String
+  description: String
+  musics: MusicCreateManyWithoutMarksInput
+  spoiled: Boolean
+  likedBy: UserCreateManyWithoutLikedMarksInput
+  favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
 
 input MusicMarkCreateWithoutFavouriteForInput {
@@ -321,6 +571,7 @@ input MusicMarkCreateWithoutFavouriteForInput {
   description: String
   musics: MusicCreateManyWithoutMarksInput
   spoiled: Boolean
+  comments: CommentCreateManyWithoutMusicMarkInput
   likedBy: UserCreateManyWithoutLikedMarksInput
 }
 
@@ -332,6 +583,7 @@ input MusicMarkCreateWithoutLikedByInput {
   description: String
   musics: MusicCreateManyWithoutMarksInput
   spoiled: Boolean
+  comments: CommentCreateManyWithoutMusicMarkInput
   favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
 
@@ -342,6 +594,7 @@ input MusicMarkCreateWithoutMusicsInput {
   title: String
   description: String
   spoiled: Boolean
+  comments: CommentCreateManyWithoutMusicMarkInput
   likedBy: UserCreateManyWithoutLikedMarksInput
   favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
@@ -353,6 +606,7 @@ input MusicMarkCreateWithoutUserInput {
   description: String
   musics: MusicCreateManyWithoutMarksInput
   spoiled: Boolean
+  comments: CommentCreateManyWithoutMusicMarkInput
   likedBy: UserCreateManyWithoutLikedMarksInput
   favouriteFor: UserCreateManyWithoutFavouriteMarksInput
 }
@@ -500,6 +754,7 @@ input MusicMarkUpdateInput {
   description: String
   musics: MusicUpdateManyWithoutMarksInput
   spoiled: Boolean
+  comments: CommentUpdateManyWithoutMusicMarkInput
   likedBy: UserUpdateManyWithoutLikedMarksInput
   favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
@@ -561,11 +816,30 @@ input MusicMarkUpdateManyWithWhereNestedInput {
   data: MusicMarkUpdateManyDataInput!
 }
 
+input MusicMarkUpdateOneRequiredWithoutCommentsInput {
+  create: MusicMarkCreateWithoutCommentsInput
+  update: MusicMarkUpdateWithoutCommentsDataInput
+  upsert: MusicMarkUpsertWithoutCommentsInput
+  connect: MusicMarkWhereUniqueInput
+}
+
 input MusicMarkUpdateOneRequiredWithoutMusicsInput {
   create: MusicMarkCreateWithoutMusicsInput
   update: MusicMarkUpdateWithoutMusicsDataInput
   upsert: MusicMarkUpsertWithoutMusicsInput
   connect: MusicMarkWhereUniqueInput
+}
+
+input MusicMarkUpdateWithoutCommentsDataInput {
+  user: UserUpdateOneRequiredWithoutMusicMarksInput
+  latitude: Float
+  longitude: Float
+  title: String
+  description: String
+  musics: MusicUpdateManyWithoutMarksInput
+  spoiled: Boolean
+  likedBy: UserUpdateManyWithoutLikedMarksInput
+  favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
 
 input MusicMarkUpdateWithoutFavouriteForDataInput {
@@ -576,6 +850,7 @@ input MusicMarkUpdateWithoutFavouriteForDataInput {
   description: String
   musics: MusicUpdateManyWithoutMarksInput
   spoiled: Boolean
+  comments: CommentUpdateManyWithoutMusicMarkInput
   likedBy: UserUpdateManyWithoutLikedMarksInput
 }
 
@@ -587,6 +862,7 @@ input MusicMarkUpdateWithoutLikedByDataInput {
   description: String
   musics: MusicUpdateManyWithoutMarksInput
   spoiled: Boolean
+  comments: CommentUpdateManyWithoutMusicMarkInput
   favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
 
@@ -597,6 +873,7 @@ input MusicMarkUpdateWithoutMusicsDataInput {
   title: String
   description: String
   spoiled: Boolean
+  comments: CommentUpdateManyWithoutMusicMarkInput
   likedBy: UserUpdateManyWithoutLikedMarksInput
   favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
@@ -608,6 +885,7 @@ input MusicMarkUpdateWithoutUserDataInput {
   description: String
   musics: MusicUpdateManyWithoutMarksInput
   spoiled: Boolean
+  comments: CommentUpdateManyWithoutMusicMarkInput
   likedBy: UserUpdateManyWithoutLikedMarksInput
   favouriteFor: UserUpdateManyWithoutFavouriteMarksInput
 }
@@ -625,6 +903,11 @@ input MusicMarkUpdateWithWhereUniqueWithoutLikedByInput {
 input MusicMarkUpdateWithWhereUniqueWithoutUserInput {
   where: MusicMarkWhereUniqueInput!
   data: MusicMarkUpdateWithoutUserDataInput!
+}
+
+input MusicMarkUpsertWithoutCommentsInput {
+  update: MusicMarkUpdateWithoutCommentsDataInput!
+  create: MusicMarkCreateWithoutCommentsInput!
 }
 
 input MusicMarkUpsertWithoutMusicsInput {
@@ -715,6 +998,9 @@ input MusicMarkWhereInput {
   musics_none: MusicWhereInput
   spoiled: Boolean
   spoiled_not: Boolean
+  comments_every: CommentWhereInput
+  comments_some: CommentWhereInput
+  comments_none: CommentWhereInput
   likedBy_every: UserWhereInput
   likedBy_some: UserWhereInput
   likedBy_none: UserWhereInput
@@ -1064,6 +1350,12 @@ input MusicWhereUniqueInput {
 }
 
 type Mutation {
+  createComment(data: CommentCreateInput!): Comment!
+  updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
+  updateManyComments(data: CommentUpdateManyMutationInput!, where: CommentWhereInput): BatchPayload!
+  upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
+  deleteComment(where: CommentWhereUniqueInput!): Comment
+  deleteManyComments(where: CommentWhereInput): BatchPayload!
   createHome(data: HomeCreateInput!): Home!
   updateHome(data: HomeUpdateInput!, where: HomeWhereUniqueInput!): Home
   updateManyHomes(data: HomeUpdateManyMutationInput!, where: HomeWhereInput): BatchPayload!
@@ -1108,6 +1400,9 @@ type PageInfo {
 }
 
 type Query {
+  comment(where: CommentWhereUniqueInput!): Comment
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
+  commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
   home(where: HomeWhereUniqueInput!): Home
   homes(where: HomeWhereInput, orderBy: HomeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Home]!
   homesConnection(where: HomeWhereInput, orderBy: HomeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): HomeConnection!
@@ -1124,6 +1419,7 @@ type Query {
 }
 
 type Subscription {
+  comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
   home(where: HomeSubscriptionWhereInput): HomeSubscriptionPayload
   music(where: MusicSubscriptionWhereInput): MusicSubscriptionPayload
   musicMark(where: MusicMarkSubscriptionWhereInput): MusicMarkSubscriptionPayload
@@ -1142,6 +1438,7 @@ type User {
   lastName: String
   homeLocation: Home
   musicMarks(where: MusicMarkWhereInput, orderBy: MusicMarkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MusicMark!]
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   favouriteMarks(where: MusicMarkWhereInput, orderBy: MusicMarkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MusicMark!]
   likedMarks(where: MusicMarkWhereInput, orderBy: MusicMarkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MusicMark!]
   followings(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
@@ -1149,6 +1446,7 @@ type User {
   friends(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   blockList(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   soundCloudToken: String
+  lastLogin: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -1170,6 +1468,7 @@ input UserCreateInput {
   lastName: String
   homeLocation: HomeCreateOneWithoutUserInput
   musicMarks: MusicMarkCreateManyWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
   likedMarks: MusicMarkCreateManyWithoutLikedByInput
   followings: UserCreateManyWithoutFollowersInput
@@ -1177,6 +1476,7 @@ input UserCreateInput {
   friends: UserCreateManyWithoutFriendsInput
   blockList: UserCreateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserCreateManyWithoutBlockListInput {
@@ -1214,6 +1514,11 @@ input UserCreateOneInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateOneWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput
+  connect: UserWhereUniqueInput
+}
+
 input UserCreateOneWithoutHomeLocationInput {
   create: UserCreateWithoutHomeLocationInput
   connect: UserWhereUniqueInput
@@ -1235,12 +1540,35 @@ input UserCreateWithoutBlockListInput {
   lastName: String
   homeLocation: HomeCreateOneWithoutUserInput
   musicMarks: MusicMarkCreateManyWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
   likedMarks: MusicMarkCreateManyWithoutLikedByInput
   followings: UserCreateManyWithoutFollowersInput
   followers: UserCreateManyWithoutFollowingsInput
   friends: UserCreateManyWithoutFriendsInput
   soundCloudToken: String
+  lastLogin: DateTime
+}
+
+input UserCreateWithoutCommentsInput {
+  username: String!
+  password: String!
+  email: String
+  isEmailActive: Boolean
+  phoneNumber: String
+  isPhoneNumberActive: Boolean
+  firstName: String
+  lastName: String
+  homeLocation: HomeCreateOneWithoutUserInput
+  musicMarks: MusicMarkCreateManyWithoutUserInput
+  favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
+  likedMarks: MusicMarkCreateManyWithoutLikedByInput
+  followings: UserCreateManyWithoutFollowersInput
+  followers: UserCreateManyWithoutFollowingsInput
+  friends: UserCreateManyWithoutFriendsInput
+  blockList: UserCreateManyWithoutBlockListInput
+  soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserCreateWithoutFavouriteMarksInput {
@@ -1254,12 +1582,14 @@ input UserCreateWithoutFavouriteMarksInput {
   lastName: String
   homeLocation: HomeCreateOneWithoutUserInput
   musicMarks: MusicMarkCreateManyWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   likedMarks: MusicMarkCreateManyWithoutLikedByInput
   followings: UserCreateManyWithoutFollowersInput
   followers: UserCreateManyWithoutFollowingsInput
   friends: UserCreateManyWithoutFriendsInput
   blockList: UserCreateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserCreateWithoutFollowersInput {
@@ -1273,12 +1603,14 @@ input UserCreateWithoutFollowersInput {
   lastName: String
   homeLocation: HomeCreateOneWithoutUserInput
   musicMarks: MusicMarkCreateManyWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
   likedMarks: MusicMarkCreateManyWithoutLikedByInput
   followings: UserCreateManyWithoutFollowersInput
   friends: UserCreateManyWithoutFriendsInput
   blockList: UserCreateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserCreateWithoutFollowingsInput {
@@ -1292,12 +1624,14 @@ input UserCreateWithoutFollowingsInput {
   lastName: String
   homeLocation: HomeCreateOneWithoutUserInput
   musicMarks: MusicMarkCreateManyWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
   likedMarks: MusicMarkCreateManyWithoutLikedByInput
   followers: UserCreateManyWithoutFollowingsInput
   friends: UserCreateManyWithoutFriendsInput
   blockList: UserCreateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserCreateWithoutFriendsInput {
@@ -1311,12 +1645,14 @@ input UserCreateWithoutFriendsInput {
   lastName: String
   homeLocation: HomeCreateOneWithoutUserInput
   musicMarks: MusicMarkCreateManyWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
   likedMarks: MusicMarkCreateManyWithoutLikedByInput
   followings: UserCreateManyWithoutFollowersInput
   followers: UserCreateManyWithoutFollowingsInput
   blockList: UserCreateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserCreateWithoutHomeLocationInput {
@@ -1329,6 +1665,7 @@ input UserCreateWithoutHomeLocationInput {
   firstName: String
   lastName: String
   musicMarks: MusicMarkCreateManyWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
   likedMarks: MusicMarkCreateManyWithoutLikedByInput
   followings: UserCreateManyWithoutFollowersInput
@@ -1336,6 +1673,7 @@ input UserCreateWithoutHomeLocationInput {
   friends: UserCreateManyWithoutFriendsInput
   blockList: UserCreateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserCreateWithoutLikedMarksInput {
@@ -1349,12 +1687,14 @@ input UserCreateWithoutLikedMarksInput {
   lastName: String
   homeLocation: HomeCreateOneWithoutUserInput
   musicMarks: MusicMarkCreateManyWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
   followings: UserCreateManyWithoutFollowersInput
   followers: UserCreateManyWithoutFollowingsInput
   friends: UserCreateManyWithoutFriendsInput
   blockList: UserCreateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserCreateWithoutMusicMarksInput {
@@ -1367,6 +1707,7 @@ input UserCreateWithoutMusicMarksInput {
   firstName: String
   lastName: String
   homeLocation: HomeCreateOneWithoutUserInput
+  comments: CommentCreateManyWithoutAuthorInput
   favouriteMarks: MusicMarkCreateManyWithoutFavouriteForInput
   likedMarks: MusicMarkCreateManyWithoutLikedByInput
   followings: UserCreateManyWithoutFollowersInput
@@ -1374,6 +1715,7 @@ input UserCreateWithoutMusicMarksInput {
   friends: UserCreateManyWithoutFriendsInput
   blockList: UserCreateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 type UserEdge {
@@ -1402,6 +1744,8 @@ enum UserOrderByInput {
   lastName_DESC
   soundCloudToken_ASC
   soundCloudToken_DESC
+  lastLogin_ASC
+  lastLogin_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -1419,6 +1763,7 @@ type UserPreviousValues {
   firstName: String
   lastName: String
   soundCloudToken: String
+  lastLogin: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -1540,6 +1885,14 @@ input UserScalarWhereInput {
   soundCloudToken_not_starts_with: String
   soundCloudToken_ends_with: String
   soundCloudToken_not_ends_with: String
+  lastLogin: DateTime
+  lastLogin_not: DateTime
+  lastLogin_in: [DateTime!]
+  lastLogin_not_in: [DateTime!]
+  lastLogin_lt: DateTime
+  lastLogin_lte: DateTime
+  lastLogin_gt: DateTime
+  lastLogin_gte: DateTime
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -1590,6 +1943,7 @@ input UserUpdateDataInput {
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followings: UserUpdateManyWithoutFollowersInput
@@ -1597,6 +1951,7 @@ input UserUpdateDataInput {
   friends: UserUpdateManyWithoutFriendsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateInput {
@@ -1610,6 +1965,7 @@ input UserUpdateInput {
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followings: UserUpdateManyWithoutFollowersInput
@@ -1617,6 +1973,7 @@ input UserUpdateInput {
   friends: UserUpdateManyWithoutFriendsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateManyDataInput {
@@ -1629,6 +1986,7 @@ input UserUpdateManyDataInput {
   firstName: String
   lastName: String
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateManyMutationInput {
@@ -1641,6 +1999,7 @@ input UserUpdateManyMutationInput {
   firstName: String
   lastName: String
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateManyWithoutBlockListInput {
@@ -1727,6 +2086,13 @@ input UserUpdateOneRequiredInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateOneRequiredWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput
+  update: UserUpdateWithoutCommentsDataInput
+  upsert: UserUpsertWithoutCommentsInput
+  connect: UserWhereUniqueInput
+}
+
 input UserUpdateOneRequiredWithoutHomeLocationInput {
   create: UserCreateWithoutHomeLocationInput
   update: UserUpdateWithoutHomeLocationDataInput
@@ -1752,12 +2118,35 @@ input UserUpdateWithoutBlockListDataInput {
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followings: UserUpdateManyWithoutFollowersInput
   followers: UserUpdateManyWithoutFollowingsInput
   friends: UserUpdateManyWithoutFriendsInput
   soundCloudToken: String
+  lastLogin: DateTime
+}
+
+input UserUpdateWithoutCommentsDataInput {
+  username: String
+  password: String
+  email: String
+  isEmailActive: Boolean
+  phoneNumber: String
+  isPhoneNumberActive: Boolean
+  firstName: String
+  lastName: String
+  homeLocation: HomeUpdateOneWithoutUserInput
+  musicMarks: MusicMarkUpdateManyWithoutUserInput
+  favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
+  likedMarks: MusicMarkUpdateManyWithoutLikedByInput
+  followings: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFollowingsInput
+  friends: UserUpdateManyWithoutFriendsInput
+  blockList: UserUpdateManyWithoutBlockListInput
+  soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateWithoutFavouriteMarksDataInput {
@@ -1771,12 +2160,14 @@ input UserUpdateWithoutFavouriteMarksDataInput {
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followings: UserUpdateManyWithoutFollowersInput
   followers: UserUpdateManyWithoutFollowingsInput
   friends: UserUpdateManyWithoutFriendsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateWithoutFollowersDataInput {
@@ -1790,12 +2181,14 @@ input UserUpdateWithoutFollowersDataInput {
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followings: UserUpdateManyWithoutFollowersInput
   friends: UserUpdateManyWithoutFriendsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateWithoutFollowingsDataInput {
@@ -1809,12 +2202,14 @@ input UserUpdateWithoutFollowingsDataInput {
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followers: UserUpdateManyWithoutFollowingsInput
   friends: UserUpdateManyWithoutFriendsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateWithoutFriendsDataInput {
@@ -1828,12 +2223,14 @@ input UserUpdateWithoutFriendsDataInput {
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followings: UserUpdateManyWithoutFollowersInput
   followers: UserUpdateManyWithoutFollowingsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateWithoutHomeLocationDataInput {
@@ -1846,6 +2243,7 @@ input UserUpdateWithoutHomeLocationDataInput {
   firstName: String
   lastName: String
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followings: UserUpdateManyWithoutFollowersInput
@@ -1853,6 +2251,7 @@ input UserUpdateWithoutHomeLocationDataInput {
   friends: UserUpdateManyWithoutFriendsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateWithoutLikedMarksDataInput {
@@ -1866,12 +2265,14 @@ input UserUpdateWithoutLikedMarksDataInput {
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
   musicMarks: MusicMarkUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   followings: UserUpdateManyWithoutFollowersInput
   followers: UserUpdateManyWithoutFollowingsInput
   friends: UserUpdateManyWithoutFriendsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateWithoutMusicMarksDataInput {
@@ -1884,6 +2285,7 @@ input UserUpdateWithoutMusicMarksDataInput {
   firstName: String
   lastName: String
   homeLocation: HomeUpdateOneWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
   favouriteMarks: MusicMarkUpdateManyWithoutFavouriteForInput
   likedMarks: MusicMarkUpdateManyWithoutLikedByInput
   followings: UserUpdateManyWithoutFollowersInput
@@ -1891,6 +2293,7 @@ input UserUpdateWithoutMusicMarksDataInput {
   friends: UserUpdateManyWithoutFriendsInput
   blockList: UserUpdateManyWithoutBlockListInput
   soundCloudToken: String
+  lastLogin: DateTime
 }
 
 input UserUpdateWithWhereUniqueWithoutBlockListInput {
@@ -1926,6 +2329,11 @@ input UserUpdateWithWhereUniqueWithoutLikedMarksInput {
 input UserUpsertNestedInput {
   update: UserUpdateDataInput!
   create: UserCreateInput!
+}
+
+input UserUpsertWithoutCommentsInput {
+  update: UserUpdateWithoutCommentsDataInput!
+  create: UserCreateWithoutCommentsInput!
 }
 
 input UserUpsertWithoutHomeLocationInput {
@@ -2081,6 +2489,9 @@ input UserWhereInput {
   musicMarks_every: MusicMarkWhereInput
   musicMarks_some: MusicMarkWhereInput
   musicMarks_none: MusicMarkWhereInput
+  comments_every: CommentWhereInput
+  comments_some: CommentWhereInput
+  comments_none: CommentWhereInput
   favouriteMarks_every: MusicMarkWhereInput
   favouriteMarks_some: MusicMarkWhereInput
   favouriteMarks_none: MusicMarkWhereInput
@@ -2113,6 +2524,14 @@ input UserWhereInput {
   soundCloudToken_not_starts_with: String
   soundCloudToken_ends_with: String
   soundCloudToken_not_ends_with: String
+  lastLogin: DateTime
+  lastLogin_not: DateTime
+  lastLogin_in: [DateTime!]
+  lastLogin_not_in: [DateTime!]
+  lastLogin_lt: DateTime
+  lastLogin_lte: DateTime
+  lastLogin_gt: DateTime
+  lastLogin_gte: DateTime
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]

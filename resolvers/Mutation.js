@@ -33,6 +33,14 @@ const Mutation = {
                     password: hashedPassword,
                 })
             }
+            await context.prisma.updateUser({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    lastLogin: new Date().toJSON()
+                }
+            });
             return {
                 token: sign({userId: user.id}, APP_SECRET),
                 user,
@@ -72,6 +80,14 @@ const Mutation = {
         if (!passwordValid) {
             throw new Error('Invalid password')
         }
+        await context.prisma.updateUser({
+            where: {
+                id: user.id
+            },
+            data: {
+                lastLogin: new Date().toJSON()
+            }
+        });
         return {
             token: sign({userId: user.id}, APP_SECRET),
             user,
@@ -118,10 +134,13 @@ const Mutation = {
     followingUser: async (parent, args, context) => {
         const userId = getUserId(context);
         const {username} = args;
-        const isFollowed = await context.prisma.$exists.user({followings_every: {username}});
-        console.log(isFollowed);
+        const isFollowed = await context.prisma.$exists.user({
+            AND: [
+                {id: userId, followings_some: {username}}
+            ]
+        });
         if (!isFollowed) {
-            await context.prisma.updateUser({
+            return await context.prisma.updateUser({
                 where: {
                     id: userId
                 },
@@ -132,20 +151,7 @@ const Mutation = {
                         }
                     }
                 }
-            });
-            return await context.prisma.updateUser({
-                where: {
-                    username
-                },
-                data: {
-                    followers: {
-                        connect: {
-                            id: userId
-                        }
-                    }
-                }
             })
-
         } else {
             throw new Error(`You have already followed ${username}!`)
         }
@@ -153,9 +159,13 @@ const Mutation = {
     unfollowingUser: async (parent, args, context) => {
         const userId = getUserId(context);
         const {username} = args;
-        const isUnfollowed = await context.prisma.$exists.user({followers_every: {username}});
-        if (!isUnfollowed) {
-            await context.prisma.updateUser({
+        const isFollowed = await context.prisma.$exists.user({
+            AND: [
+                {id: userId, followings_some: {username}}
+            ]
+        });
+        if (isFollowed) {
+            return await context.prisma.updateUser({
                 where: {
                     id: userId
                 },
@@ -167,12 +177,146 @@ const Mutation = {
                     }
                 }
             });
+        } else {
+            throw new Error(`You can't unfollow someone who didn't followed him/her before!!`)
+        }
+    },
+    addFriend: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {username} = args;
+        const isFriend = await context.prisma.$exists.user({
+            AND: [
+                {id: userId, friends_some: {username}}
+            ]
+        });
+        if (!isFriend) {
             return await context.prisma.updateUser({
                 where: {
-                    username
+                    id: userId
                 },
                 data: {
-                    followers: {
+                    friends: {
+                        connect: {
+                            username
+                        }
+                    }
+                }
+            })
+        } else {
+            throw new Error(`You have already added ${username} to your friends!`)
+        }
+
+    },
+    unFriend: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {username} = args;
+        const isFriend = await context.prisma.$exists.user({
+            AND: [
+                {id: userId, friends_some: {username}}
+            ]
+        });
+        if (isFriend) {
+            return await context.prisma.updateUser({
+                where: {
+                    id: userId
+                },
+                data: {
+                    friends: {
+                        disconnect: {
+                            username
+                        }
+                    }
+                }
+            })
+        } else {
+            throw new Error(`${username} is not in your friends list!`)
+        }
+
+    },
+    blockUser: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {username} = args;
+        const isBlocked = await context.prisma.$exists.user({
+            AND: [
+                {id: userId, blockList_some: {username}}
+            ]
+        });
+        if (!isBlocked) {
+            return await context.prisma.updateUser({
+                where: {
+                    id: userId
+                },
+                data: {
+                    blockList: {
+                        connect: {
+                            username
+                        }
+                    }
+                }
+            })
+        } else {
+            throw new Error(`You have already blocked ${username}!`)
+        }
+
+    },
+    unblockUser: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {username} = args;
+        const isBlocked = await context.prisma.$exists.user({
+            AND: [
+                {id: userId, blockList_some: {username}}
+            ]
+        });
+        if (isBlocked) {
+            return await context.prisma.updateUser({
+                where: {
+                    id: userId
+                },
+                data: {
+                    blockList: {
+                        disconnect: {
+                            username
+                        }
+                    }
+                }
+            })
+        } else {
+            throw new Error(`${username} is not in your block list!`)
+        }
+
+    },
+    likeMusicMark: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {musicMarkId} = args;
+        return await context.prisma.updateMusicMark({
+            where: {
+                id: musicMarkId
+            },
+            data: {
+                likedBy: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            }
+        })
+    },
+    dislikeMusicMark: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {musicMarkId} = args;
+        const isLiked = await context.prisma.$exists.musicMark({
+            AND: [{
+                id: musicMarkId,
+                likedBy_some: {id: userId}
+            }]
+        });
+        if (isLiked) {
+            return await context.prisma.updateMusicMark({
+                where: {
+                    id: musicMarkId
+                },
+                data: {
+                    likedBy: {
                         disconnect: {
                             id: userId
                         }
@@ -180,31 +324,51 @@ const Mutation = {
                 }
             })
         } else {
-            throw new Error(`You have already unfollowed ${username}!`)
+            throw new Error("You need to like it first!")
         }
     },
-    addFriend: async (parent, args, context) => {
-        const userId = getUserId(context);
-
-    },
-    unFriend: async (parent, args, context) => {
-        const userId = getUserId(context);
-
-    },
-    blockUser: async (parent, args, context) => {
-        const userId = getUserId(context);
-
-    },
-    unblockUser: async (parent, args, context) => {
-        const userId = getUserId(context);
-
-    },
-    likeMusicMark: async (parent, args, context) => {
-        const userId = getUserId(context);
-
-    },
     favouriteMusicMark: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {musicMarkId} = args;
+        return await context.prisma.updateMusicMark({
+            where: {
+                id: musicMarkId
+            },
+            data: {
+                favouriteFor: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            }
+        })
 
+    },
+    unfavoriteMusicMark: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {musicMarkId} = args;
+        const isFavourite = await context.prisma.$exists.musicMark({
+            AND: [{
+                id: musicMarkId,
+                favouriteFor_some: {id: userId}
+            }]
+        });
+        if (isFavourite) {
+            return await context.prisma.updateMusicMark({
+                where: {
+                    id: musicMarkId
+                },
+                data: {
+                    favouriteFor: {
+                        disconnect: {
+                            id: userId
+                        }
+                    }
+                }
+            })
+        } else {
+            throw new Error("This mark is not in your favourite list!")
+        }
     },
     createMusicMark: async (parent, args, context) => {
         const {latitude, longitude, musics, title, description} = args;
@@ -263,6 +427,28 @@ const Mutation = {
             })
         } else {
             throw new Error("Removing mark is not possible because others added music in here!")
+        }
+    },
+    addComment: async (parent, args, context) => {
+        const userId = getUserId(context);
+        const {musicMarkId, description} = args;
+        const isMusicMarkExists = await context.prisma.$exists.musicMark({id: musicMarkId});
+        if (isMusicMarkExists) {
+            return await context.prisma.createComment({
+                author: {
+                    connect: {
+                        id: userId
+                    }
+                },
+                musicMark: {
+                    connect: {
+                        id: musicMarkId
+                    }
+                },
+                description
+            })
+        } else {
+            throw new Error("There's not such a mark!")
         }
     },
     // Adding music to places by place owner or others

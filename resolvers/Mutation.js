@@ -1,9 +1,12 @@
 const {hash, compare} = require('bcrypt');
 const {sign} = require('jsonwebtoken');
 const {APP_SECRET, getUserId} = require('../utils');
+const { Schema } = require('../validations/Schema');
+
 
 const Mutation = {
     signup: async (parent, {username, phoneNumber, email, password}, context) => {
+        Schema.signup(username, phoneNumber, email, password);
         if (phoneNumber || email) {
             const hashedPassword = await hash(password, 10);
             let user;
@@ -17,7 +20,6 @@ const Mutation = {
             }
             // In case that user just provides email
             else if (email) {
-                console.log(username, email, password)
                 user = await context.prisma.createUser({
                     username,
                     email,
@@ -51,6 +53,7 @@ const Mutation = {
     },
     login: async (parent, {username, phoneNumber, email, password}, context) => {
         let user;
+        Schema.login(username, phoneNumber, email, password);
         if (phoneNumber || email || username) {
             // In case that user just provides phoneNumber
             if (phoneNumber) {
@@ -96,6 +99,7 @@ const Mutation = {
     upsertUserHome: async (parent, args, context) => {
         const userId = getUserId(context);
         const {latitude, longitude, address} = args;
+        Schema.upsertUserHome(latitude, longitude, address);
         return await context.prisma.updateUser({
             where: {
                 id: userId
@@ -134,6 +138,7 @@ const Mutation = {
     followingUser: async (parent, args, context) => {
         const userId = getUserId(context);
         const {username} = args;
+        Schema.usernameValidation(username);
         const isFollowed = await context.prisma.$exists.user({
             AND: [
                 {id: userId, followings_some: {username}}
@@ -159,6 +164,7 @@ const Mutation = {
     unfollowingUser: async (parent, args, context) => {
         const userId = getUserId(context);
         const {username} = args;
+        Schema.usernameValidation(username);
         const isFollowed = await context.prisma.$exists.user({
             AND: [
                 {id: userId, followings_some: {username}}
@@ -184,6 +190,7 @@ const Mutation = {
     addFriend: async (parent, args, context) => {
         const userId = getUserId(context);
         const {username} = args;
+        Schema.usernameValidation(username);
         const isFriend = await context.prisma.$exists.user({
             AND: [
                 {id: userId, friends_some: {username}}
@@ -210,6 +217,7 @@ const Mutation = {
     unFriend: async (parent, args, context) => {
         const userId = getUserId(context);
         const {username} = args;
+        Schema.usernameValidation(username);
         const isFriend = await context.prisma.$exists.user({
             AND: [
                 {id: userId, friends_some: {username}}
@@ -236,6 +244,7 @@ const Mutation = {
     blockUser: async (parent, args, context) => {
         const userId = getUserId(context);
         const {username} = args;
+        Schema.usernameValidation(username);
         const isBlocked = await context.prisma.$exists.user({
             AND: [
                 {id: userId, blockList_some: {username}}
@@ -262,6 +271,7 @@ const Mutation = {
     unblockUser: async (parent, args, context) => {
         const userId = getUserId(context);
         const {username} = args;
+        Schema.usernameValidation(username);
         const isBlocked = await context.prisma.$exists.user({
             AND: [
                 {id: userId, blockList_some: {username}}
@@ -372,6 +382,7 @@ const Mutation = {
     },
     createMusicMark: async (parent, args, context) => {
         const {latitude, longitude, musics, title, description} = args;
+        Schema.createMusicMark(latitude, longitude, musics, title, description);
         // TODO Validation
         const userId = getUserId(context);
         // Adding user for each music object (later we need to track em to find which user added music for the same mark)
@@ -379,7 +390,6 @@ const Mutation = {
         musics.map(music => {
             musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
         });
-        console.log(musicsWithUser)
         // Creating a mark on map
         return await context.prisma.createMusicMark({
             latitude,
@@ -399,6 +409,7 @@ const Mutation = {
     // Only owner could update the mark place on map(if there's no extra music added by others)
     updateMusicMark: async (parent, args, context) => {
         const {musicMarkId, latitude, longitude, title, description} = args;
+        Schema.updateMusicMark(latitude, longitude, title, description)
         const spoiled = await context.prisma.musicMark({id: musicMarkId}).spoiled();
         // Check if other people added new music in here
         if (!spoiled) {
@@ -432,6 +443,7 @@ const Mutation = {
     addComment: async (parent, args, context) => {
         const userId = getUserId(context);
         const {musicMarkId, description} = args;
+        Schema.addComment(description);
         const isMusicMarkExists = await context.prisma.$exists.musicMark({id: musicMarkId});
         if (isMusicMarkExists) {
             return await context.prisma.createComment({
@@ -454,6 +466,7 @@ const Mutation = {
     // Adding music to places by place owner or others
     createMusic: async (parent, args, context) => {
         const {musicMarkId, musics} = args;
+        Schema.createMusic(musics);
         const userId = getUserId(context);
         const user = await context.prisma.musicMark({id: musicMarkId}).user();
         // Adding user for each music object (later we need to track em to find which user added music for the same mark)
@@ -461,7 +474,6 @@ const Mutation = {
         musics.map(music => {
             musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
         });
-        console.log(musicsWithUser);
         if (userId === user) {
             return await context.prisma.updateMusicMark({
                 where: {
@@ -494,6 +506,7 @@ const Mutation = {
     },
     updateMusic: async (parent, args, context) => {
         const {musicId, uri, title, description} = args;
+        Schema.updateMusic(uri, title, description);
         return await context.prisma.updateMusic({
             where: {
                 id: musicId

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const myCustomJoi = Joi.extend(require('joi-phone-number'));
 
 const Schema = {
     signup(username, phoneNumber, email, password) {
@@ -6,8 +7,7 @@ const Schema = {
             username: Joi.string().alphanum().min(3).max(30).required(),
             password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
             email: Joi.string().email({minDomainAtoms: 2}),
-            // TODO add countries code
-            phoneNumber: Joi.string().max(10)
+            phoneNumber: myCustomJoi.string().phoneNumber()
         });
 
         const {error, value} = Joi.validate({username, phoneNumber, email, password}, signupSchema);
@@ -17,8 +17,22 @@ const Schema = {
         }
     },
 
-    login(username, phoneNumber, email, password) {
-        this.signup(username, phoneNumber, email, password)
+    login(username, password) {
+        const loginSchema = Joi.object().keys({
+            username: Joi.string().alphanum().min(3).max(30).required(),
+            password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
+        });
+
+        const {error, value} = Joi.validate({username, password}, loginSchema);
+
+        if (error) {
+            throw new Error(error.details[0].message)
+        }
+    },
+
+    // TODO
+    forgetPassword() {
+
     },
 
     usernameValidation(username) {

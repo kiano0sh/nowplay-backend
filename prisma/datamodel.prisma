@@ -62,6 +62,8 @@ type MusicMark {
   updatedAt: DateTime!
 }
 
+# TODO just send description and author
+
 type Comment {
   id: ID! @unique
   musicMark: MusicMark! @relation(name: "Comments", onDelete: SET_NULL)

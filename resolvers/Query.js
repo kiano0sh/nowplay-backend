@@ -1,5 +1,7 @@
 const {getUserId} = require('../utils');
 
+// TODO users id + email + phoneNumber + and other that could violence our user privacy is not something that i like to send for public
+
 const Query = {
     me: async (parent, args, context) => {
         const userId = getUserId(context);

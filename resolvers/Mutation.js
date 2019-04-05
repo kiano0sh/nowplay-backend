@@ -51,37 +51,17 @@ const Mutation = {
             throw new Error('Please provide "phoneNumber" or "email"')
         }
     },
-    login: async (parent, {username, phoneNumber, email, password}, context) => {
+    login: async (parent, {username, password}, context) => {
         let user;
-        Schema.login(username, phoneNumber, email, password);
-        if (phoneNumber || email || username) {
-            // In case that user just provides phoneNumber
-            if (phoneNumber) {
-                user = await context.prisma.user({phoneNumber});
-                if (!user) {
-                    throw new Error(`No user found for phone number: ${phoneNumber}`)
-                }
-            }
-            // In case that user just provides email
-            else if (email) {
-                user = await context.prisma.user({email});
-                if (!user) {
-                    throw new Error(`No user found for email: ${email}`)
-                }
-            }
-            // In case that user provides username
-            else {
-                user = await context.prisma.user({username});
-                if (!user) {
-                    throw new Error(`No user found for username: ${username}`)
-                }
-            }
-        } else {
-            throw new Error('Please provide "phoneNumber" or "email" or "username"')
+        Schema.login(username, password);
+        user = await context.prisma.user({username});
+        if (!user) {
+            throw new Error('{"username": "Invalid username"}')
         }
-        const passwordValid = compare(password, user.password);
+        const passwordValid = await compare(password, user.password);
+        console.log(passwordValid)
         if (!passwordValid) {
-            throw new Error('Invalid password')
+            throw new Error('{"password": "Invalid password"}')
         }
         await context.prisma.updateUser({
             where: {

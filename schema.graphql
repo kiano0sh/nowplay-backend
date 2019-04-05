@@ -12,7 +12,7 @@ type Query {
 
 type Mutation {
     signup(username: String!, phoneNumber: String, email: String, password: String!): AuthPayload!
-    login(username: String, phoneNumber: String, email: String, password: String!): AuthPayload!
+    login(username: String, password: String!): AuthPayload!
     updateUser(password: String, email: String, firstName: String, lastName: String): User!
     upsertUserHome(latitude: Float!, longitude: Float!, address: String): Home
     # No need for entries cuz we already have userId

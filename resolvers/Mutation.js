@@ -5,8 +5,8 @@ const { Schema } = require('../validations/Schema');
 
 
 const Mutation = {
-    signup: async (parent, {username, phoneNumber, email, password}, context) => {
-        Schema.signup(username, phoneNumber, email, password);
+    register: async (parent, {username, phoneNumber, email, password}, context) => {
+        Schema.register(username, phoneNumber, email, password);
         if (phoneNumber || email) {
             const hashedPassword = await hash(password, 10);
             let user;
@@ -51,6 +51,7 @@ const Mutation = {
             throw new Error('Please provide "phoneNumber" or "email"')
         }
     },
+    // TODO login with email or phone number should be added
     login: async (parent, {username, password}, context) => {
         let user;
         Schema.login(username, password);
@@ -59,7 +60,6 @@ const Mutation = {
             throw new Error('{"username": "Invalid username"}')
         }
         const passwordValid = await compare(password, user.password);
-        console.log(passwordValid)
         if (!passwordValid) {
             throw new Error('{"password": "Invalid password"}')
         }

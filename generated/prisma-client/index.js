@@ -28,6 +28,6 @@ var models = [
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `http://localhost:4466`
+  endpoint: `https://eu1.prisma.sh/kianoosh-hooshmand-21db8d/NowplayServer/dev`
 });
 exports.prisma = new exports.Prisma();

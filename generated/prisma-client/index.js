@@ -13,6 +13,10 @@ var models = [
     embedded: false
   },
   {
+    name: "trackServices",
+    embedded: false
+  },
+  {
     name: "Music",
     embedded: false
   },
@@ -28,6 +32,6 @@ var models = [
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://eu1.prisma.sh/kianoosh-hooshmand-21db8d/NowplayServer/dev`
+  endpoint: `http://localhost:4466`
 });
 exports.prisma = new exports.Prisma();

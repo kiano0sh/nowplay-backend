@@ -77,8 +77,16 @@ const Schema = {
         }
     },
 
-    uriValidation(uri) {
-        const {error, value} = Joi.validate(uri, Joi.string().uri().required());
+    trackIdValidation(trackId) {
+        const {error, value} = Joi.validate(trackId, Joi.number().integer().required());
+
+        if (error) {
+            throw new Error(error.details[0].message)
+        }
+    },
+
+    trackServiceValidation(trackService) {
+        const {error, value} = Joi.validate(trackService, Joi.string().required());
 
         if (error) {
             throw new Error(error.details[0].message)
@@ -102,7 +110,8 @@ const Schema = {
     createMusicMark(latitude, longitude, musics, title, description) {
         this.coordinateValidation(latitude, longitude, true);
         musics.map(music => {
-            this.uriValidation(music.uri);
+            this.trackIdValidation(music.trackId);
+            this.trackServiceValidation(music.trackService);
             this.titleAndDescriptionValidation(music.title, music.description)
         });
         this.titleAndDescriptionValidation(title, description)
@@ -119,13 +128,15 @@ const Schema = {
 
     createMusic(musics) {
         musics.map(music => {
-            this.uriValidation(music.uri);
+            this.trackIdValidation(music.trackId);
+            this.trackServiceValidation(music.trackService);
             this.titleAndDescriptionValidation(music.title, music.description)
         });
     },
 
-    updateMusic(uri, title, description) {
-        this.uriValidation(uri);
+    updateMusic(trackId, trackService, title, description) {
+        this.trackIdValidation(trackId);
+        this.trackServiceValidation(trackService);
         this.titleAndDescriptionValidation(title, description)
     },
 };

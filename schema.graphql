@@ -1,5 +1,11 @@
 scalar DateTime
 
+enum trackServices {
+    Soundcloud
+    Spotify
+    Youtube
+}
+
 type Query {
     me: User
     userByUsername(username: String!): User
@@ -28,7 +34,7 @@ type Mutation {
     deleteMusicMark(musicMarkId: ID!): MusicMark
     addComment(musicMarkId: ID!, description: String!): Comment!
     createMusic(musicMarkId: ID!, musics: [MusicInput!]!): MusicMark
-    updateMusic(musicId: ID!, uri: String!, title: String, description: String): Music
+    updateMusic(musicId: ID!, trackId: Int!, trackService: trackServices!, title: String, description: String): Music
     deleteMusic(musicId: ID!): Music
     likeMusicMark(musicMarkId: ID!): MusicMark
     dislikeMusicMark(musicMarkId: ID!): MusicMark
@@ -120,7 +126,8 @@ input MusicMarkInput {
 }
 
 input MusicInput {
-    uri: String!
+    trackId: Int!
+    trackService: trackServices!
     title: String
     description: String
 }

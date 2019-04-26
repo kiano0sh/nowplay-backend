@@ -1,72 +1,77 @@
 type User {
-  id: ID! @unique
-  username: String! @unique
-  password: String!
-  email: String @unique
-  isEmailActive: Boolean! @default(value: "false")
-  phoneNumber: String @unique
-  isPhoneNumberActive: Boolean! @default(value: "false")
-  firstName: String
-  lastName: String
-  homeLocation: Home @relation(name: "HomeOwner", onDelete: CASCADE)
-  musicMarks: [MusicMark!]! @relation(name: "MusicMarker", onDelete: CASCADE)
-  comments: [Comment!]! @relation(name: "CommentAuthor", onDelete: CASCADE)
-  favouriteMarks: [MusicMark!]! @relation(name: "FavouriteMarks", onDelete: CASCADE)
-  likedMarks: [MusicMark!]! @relation(name: "LikedMarks", onDelete: CASCADE)
-  followings: [User!]! @relation(name: "FollowRelation")
-  followers: [User!]! @relation(name: "FollowRelation")
-  friends: [User!]! @relation(name: "FriendsRelation")
-  blockList: [User!]! @relation(name: "BlockListRelation")
-  soundCloudToken: String
-  lastLogin: DateTime
-  createdAt: DateTime!
-  updatedAt: DateTime!
+    id: ID! @unique
+    username: String! @unique
+    password: String!
+    email: String @unique
+    isEmailActive: Boolean! @default(value: "false")
+    phoneNumber: String @unique
+    isPhoneNumberActive: Boolean! @default(value: "false")
+    firstName: String
+    lastName: String
+    homeLocation: Home @relation(name: "HomeOwner", onDelete: CASCADE)
+    musicMarks: [MusicMark!]! @relation(name: "MusicMarker", onDelete: CASCADE)
+    comments: [Comment!]! @relation(name: "CommentAuthor", onDelete: CASCADE)
+    favouriteMarks: [MusicMark!]! @relation(name: "FavouriteMarks", onDelete: CASCADE)
+    likedMarks: [MusicMark!]! @relation(name: "LikedMarks", onDelete: CASCADE)
+    followings: [User!]! @relation(name: "FollowRelation")
+    followers: [User!]! @relation(name: "FollowRelation")
+    friends: [User!]! @relation(name: "FriendsRelation")
+    blockList: [User!]! @relation(name: "BlockListRelation")
+    soundCloudToken: String
+    lastLogin: DateTime
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 
 type Home {
-  id: ID! @unique
-  user: User! @relation(name: "HomeOwner", onDelete: SET_NULL)
-  latitude: Float!
-  longitude: Float!
-  address: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
+    id: ID! @unique
+    user: User! @relation(name: "HomeOwner", onDelete: SET_NULL)
+    latitude: Float!
+    longitude: Float!
+    address: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+enum trackServices {
+    Soundcloud
+    Spotify
+    Youtube
 }
 
 type Music {
-  id: ID! @unique
-  user: User! @relation(name: "MusicAdder", onDelete: SET_NULL)
-  marks: MusicMark! @relation(name: "Musics")
-  title: String
-  description: String
-  singer: String
-  duration: Float
-  uri: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+    id: ID! @unique
+    user: User! @relation(name: "MusicAdder", onDelete: SET_NULL)
+    marks: MusicMark! @relation(name: "Musics")
+    title: String
+    description: String
+    trackId: Int!
+    trackService: trackServices!
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 
 type MusicMark {
-  id: ID! @unique
-  user: User! @relation(name: "MusicMarker", onDelete: SET_NULL)
-  latitude: Float!
-  longitude: Float!
-  title: String
-  description: String
-  musics: [Music!]! @relation(name: "Musics", onDelete: CASCADE)
-  spoiled: Boolean! @default(value: "false")
-  comments: [Comment!]! @relation(name: "Comments", onDelete: CASCADE)
-  likedBy: [User!]! @relation(name: "LikedMarks", onDelete: SET_NULL)
-  favouriteFor: [User!]! @relation(name: "FavouriteMarks", onDelete: SET_NULL)
-  createdAt: DateTime!
-  updatedAt: DateTime!
+    id: ID! @unique
+    user: User! @relation(name: "MusicMarker", onDelete: SET_NULL)
+    latitude: Float!
+    longitude: Float!
+    title: String
+    description: String
+    musics: [Music!]! @relation(name: "Musics", onDelete: CASCADE)
+    spoiled: Boolean! @default(value: "false")
+    comments: [Comment!]! @relation(name: "Comments", onDelete: CASCADE)
+    likedBy: [User!]! @relation(name: "LikedMarks", onDelete: SET_NULL)
+    favouriteFor: [User!]! @relation(name: "FavouriteMarks", onDelete: SET_NULL)
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 
 # TODO just send description and author
 
 type Comment {
-  id: ID! @unique
-  musicMark: MusicMark! @relation(name: "Comments", onDelete: SET_NULL)
-  description: String!
-  author: User! @relation(name: "CommentAuthor", onDelete: SET_NULL)
+    id: ID! @unique
+    musicMark: MusicMark! @relation(name: "Comments", onDelete: SET_NULL)
+    description: String!
+    author: User! @relation(name: "CommentAuthor", onDelete: SET_NULL)
 }

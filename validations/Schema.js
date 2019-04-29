@@ -1,5 +1,20 @@
 const Joi = require('joi');
 const myCustomJoi = Joi.extend(require('joi-phone-number'));
+const {createError} = require('apollo-errors')
+
+
+// process.on('unhandledRejection', (reason, promise) => {
+//     console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+//     Schema.kk()
+//     // Application specific logging, throwing an error, or other logic here
+// });
+
+
+const FooError = createError('FooError', {
+    message: 'A foo error has occurred'
+});
+
+
 
 const Schema = {
     register(username, phoneNumber, email, password) {
@@ -107,9 +122,9 @@ const Schema = {
         }
     },
 
-    createMusicMark(latitude, longitude, musics, title, description) {
+    createMusicMark(latitude, longitude, musics, title, description, context) {
         this.coordinateValidation(latitude, longitude, true);
-        musics.map(music => {
+        musics.map(async music => {
             this.trackIdValidation(music.trackId);
             this.trackServiceValidation(music.trackService);
             this.titleAndDescriptionValidation(music.title, music.description)
@@ -126,7 +141,7 @@ const Schema = {
         this.titleAndDescriptionValidation(undefined, description)
     },
 
-    createMusic(musics) {
+    createMusic(musics, musicMarkId, context) {
         musics.map(music => {
             this.trackIdValidation(music.trackId);
             this.trackServiceValidation(music.trackService);

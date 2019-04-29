@@ -3,11 +3,13 @@ const { prisma } = require('./generated/prisma-client');
 const { resolvers } = require('./resolvers');
 const { permissions } = require('./permissions');
 // import cors from 'cors';
+const { formatError } = require('apollo-errors')
 
 const server = new GraphQLServer({
     typeDefs: './schema.graphql',
     resolvers,
     middlewares: [permissions],
+    formatError,
     context: request => {
         return {
             ...request,

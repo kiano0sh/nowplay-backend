@@ -362,9 +362,26 @@ const Mutation = {
     },
     createMusicMark: async (parent, args, context) => {
         const {latitude, longitude, musics, title, description} = args;
-        Schema.createMusicMark(latitude, longitude, musics, title, description);
+        await Schema.createMusicMark(latitude, longitude, musics, title, description);
         // TODO Validation
         const userId = getUserId(context);
+        await Promise.all(musics.map(async (music) => {
+            let isMusicExists = await context.prisma.$exists.musicMark({
+                AND: [
+                    {
+                        latitude,
+                        longitude,
+                        musics_some: {
+                            trackId: music.trackId,
+                            trackService: music.trackService
+                        }
+                    }
+                ]
+            });
+            if (isMusicExists){
+                throw new Error('You can\'t add duplicate songs!')
+            }
+        }));
         // Adding user for each music object (later we need to track em to find which user added music for the same mark)
         let musicsWithUser = [];
         musics.map(music => {
@@ -446,7 +463,23 @@ const Mutation = {
     // Adding music to places by place owner or others
     createMusic: async (parent, args, context) => {
         const {musicMarkId, musics} = args;
-        Schema.createMusic(musics);
+        await Schema.createMusic(musics, musicMarkId, context);
+        await Promise.all(musics.map(async (music) => {
+            let isMusicExists = await context.prisma.$exists.musicMark({
+                AND: [
+                    {
+                        id: musicMarkId,
+                        musics_some: {
+                            trackId: music.trackId,
+                            trackService: music.trackService
+                        }
+                    }
+                ]
+            });
+            if (isMusicExists){
+                throw new Error('You can\'t add duplicate songs!')
+            }
+        }));
         const userId = getUserId(context);
         const user = await context.prisma.musicMark({id: musicMarkId}).user();
         // Adding user for each music object (later we need to track em to find which user added music for the same mark)

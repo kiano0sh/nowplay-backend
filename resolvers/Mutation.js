@@ -360,12 +360,23 @@ const Mutation = {
             throw new Error("This mark is not in your favourite list!")
         }
     },
+    // TODO are we gonna check for duplicate locations ?!
     createMusicMark: async (parent, args, context) => {
         const {latitude, longitude, musics, title, description} = args;
         await Schema.createMusicMark(latitude, longitude, musics, title, description);
         // TODO Validation
         const userId = getUserId(context);
+        let musicsWithUser = [];
+        console.log(args)
+        isMarkExists = await context.prisma.$exists.musicMark({
+            latitude,
+            longitude
+        })
+        if (isMarkExists) {
+            throw new Error("This place has already taken, You can add songs to it if you want!")
+        }
         await Promise.all(musics.map(async (music) => {
+            // Check for duplicate songs
             let isMusicExists = await context.prisma.$exists.musicMark({
                 AND: [
                     {
@@ -378,15 +389,14 @@ const Mutation = {
                     }
                 ]
             });
-            if (isMusicExists){
+            console.log(isMusicExists)
+            if (isMusicExists) {
                 throw new Error('You can\'t add duplicate songs!')
             }
-        }));
-        // Adding user for each music object (later we need to track em to find which user added music for the same mark)
-        let musicsWithUser = [];
-        musics.map(music => {
+            // Adding user for each music object (later we need to track em to find which user added music for the same mark)
             musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
-        });
+
+        }));
         // Creating a mark on map
         return await context.prisma.createMusicMark({
             latitude,
@@ -464,6 +474,9 @@ const Mutation = {
     createMusic: async (parent, args, context) => {
         const {musicMarkId, musics} = args;
         await Schema.createMusic(musics, musicMarkId, context);
+        let musicsWithUser = [];
+        const userId = getUserId(context);
+        const user = await context.prisma.musicMark({id: musicMarkId}).user();
         await Promise.all(musics.map(async (music) => {
             let isMusicExists = await context.prisma.$exists.musicMark({
                 AND: [
@@ -479,14 +492,10 @@ const Mutation = {
             if (isMusicExists){
                 throw new Error('You can\'t add duplicate songs!')
             }
-        }));
-        const userId = getUserId(context);
-        const user = await context.prisma.musicMark({id: musicMarkId}).user();
-        // Adding user for each music object (later we need to track em to find which user added music for the same mark)
-        let musicsWithUser = [];
-        musics.map(music => {
+            // Adding user for each music object (later we need to track em to find which user added music for the same mark)
             musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
-        });
+
+        }));
         if (userId === user) {
             return await context.prisma.updateMusicMark({
                 where: {

@@ -91,6 +91,8 @@ type Music {
     singer: String
     duration: Float
     uri: String!
+    trackId: Int!
+    trackService: trackServices!
     createdAt: DateTime!
     updatedAt: DateTime!
 }

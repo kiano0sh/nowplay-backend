@@ -62,13 +62,13 @@ const Schema = {
         let coordinateSchema;
         if (required) {
              coordinateSchema = Joi.object().keys({
-                latitude: Joi.number().min(-90).max(90).required(),
-                longitude: Joi.number().min(-180).max(180).required()
+                latitude: Joi.number().min(-90).max(90).precision(5).strict().required(),
+                longitude: Joi.number().min(-180).max(180).precision(5).strict().required()
             });
         } else {
              coordinateSchema = Joi.object().keys({
-                latitude: Joi.number().min(-90).max(90),
-                longitude: Joi.number().min(-180).max(180)
+                latitude: Joi.number().min(-90).max(90).precision(5).strict(),
+                longitude: Joi.number().min(-180).max(180).precision(5).strict()
             });
         }
 

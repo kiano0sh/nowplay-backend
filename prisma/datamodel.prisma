@@ -54,8 +54,8 @@ type Music {
 type MusicMark {
     id: ID! @unique
     user: User! @relation(name: "MusicMarker", onDelete: SET_NULL)
-    latitude: Float!
-    longitude: Float!
+    latitude: Float! @unique
+    longitude: Float! @unique
     title: String
     description: String
     musics: [Music!]! @relation(name: "Musics", onDelete: CASCADE)

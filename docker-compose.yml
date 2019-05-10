@@ -17,6 +17,8 @@ services:
             password: prisma
             migrations: true
   postgres:
+    ports:
+      - "3001:5432"
     image: postgres:10.3
     restart: always
     environment:

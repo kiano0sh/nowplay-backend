@@ -40,7 +40,7 @@ const Query = {
       `SELECT *
         FROM
           (SELECT *,
-                  (6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(32.8547)) * sin(radians(latitude)))) AS distance
+                  (6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(latitude)))) AS distance
            FROM default$default."MusicMark") al
         WHERE distance < ${maxradiuskm}
         ORDER BY distance`

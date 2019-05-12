@@ -156,6 +156,7 @@ const Schema = {
     },
 };
 
+// TODO add validation for artwork, artist, genre, duration, description, trackCreatedAt in Music 
 
 module.exports = {
     Schema

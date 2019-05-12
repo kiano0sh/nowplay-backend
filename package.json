@@ -16,6 +16,7 @@
     "joi-phone-number": "^2.1.1",
     "jsonwebtoken": "8.5.1",
     "pg": "^7.10.0",
+    "prisma": "^1.32.2",
     "prisma-client-lib": "1.29.1"
   },
   "scripts": {

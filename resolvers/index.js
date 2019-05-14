@@ -1,9 +1,9 @@
-const { Mutation } = require('./Mutation');
-const { Query } = require('./Query');
-const { User } = require('./User');
-const { MusicMark } = require('./MusicMark');
-const { Music } = require('./Music');
-const { Comment } = require('./Comment');
+const { Mutation } = require("./Mutation");
+const { Query } = require("./Query");
+const { User } = require("./User");
+const { MusicMark } = require("./MusicMark");
+const { Music } = require("./Music");
+const { Comment } = require("./Comment");
 
 const resolvers = {
   Mutation,
@@ -15,5 +15,5 @@ const resolvers = {
 };
 
 module.exports = {
-  resolvers,
+  resolvers
 };

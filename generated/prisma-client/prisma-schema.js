@@ -495,7 +495,6 @@ type Music {
   artist: String
   genre: String
   duration: Float!
-  description: String
   trackCreatedAt: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -518,7 +517,6 @@ input MusicCreateInput {
   artist: String
   genre: String
   duration: Float!
-  description: String
   trackCreatedAt: DateTime!
 }
 
@@ -537,7 +535,6 @@ input MusicCreateWithoutMarksInput {
   artist: String
   genre: String
   duration: Float!
-  description: String
   trackCreatedAt: DateTime!
 }
 
@@ -1110,8 +1107,6 @@ enum MusicOrderByInput {
   genre_DESC
   duration_ASC
   duration_DESC
-  description_ASC
-  description_DESC
   trackCreatedAt_ASC
   trackCreatedAt_DESC
   createdAt_ASC
@@ -1129,7 +1124,6 @@ type MusicPreviousValues {
   artist: String
   genre: String
   duration: Float!
-  description: String
   trackCreatedAt: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -1226,20 +1220,6 @@ input MusicScalarWhereInput {
   duration_lte: Float
   duration_gt: Float
   duration_gte: Float
-  description: String
-  description_not: String
-  description_in: [String!]
-  description_not_in: [String!]
-  description_lt: String
-  description_lte: String
-  description_gt: String
-  description_gte: String
-  description_contains: String
-  description_not_contains: String
-  description_starts_with: String
-  description_not_starts_with: String
-  description_ends_with: String
-  description_not_ends_with: String
   trackCreatedAt: DateTime
   trackCreatedAt_not: DateTime
   trackCreatedAt_in: [DateTime!]
@@ -1297,7 +1277,6 @@ input MusicUpdateInput {
   artist: String
   genre: String
   duration: Float
-  description: String
   trackCreatedAt: DateTime
 }
 
@@ -1309,7 +1288,6 @@ input MusicUpdateManyDataInput {
   artist: String
   genre: String
   duration: Float
-  description: String
   trackCreatedAt: DateTime
 }
 
@@ -1321,7 +1299,6 @@ input MusicUpdateManyMutationInput {
   artist: String
   genre: String
   duration: Float
-  description: String
   trackCreatedAt: DateTime
 }
 
@@ -1351,7 +1328,6 @@ input MusicUpdateWithoutMarksDataInput {
   artist: String
   genre: String
   duration: Float
-  description: String
   trackCreatedAt: DateTime
 }
 
@@ -1459,20 +1435,6 @@ input MusicWhereInput {
   duration_lte: Float
   duration_gt: Float
   duration_gte: Float
-  description: String
-  description_not: String
-  description_in: [String!]
-  description_not_in: [String!]
-  description_lt: String
-  description_lte: String
-  description_gt: String
-  description_gte: String
-  description_contains: String
-  description_not_contains: String
-  description_starts_with: String
-  description_not_starts_with: String
-  description_ends_with: String
-  description_not_ends_with: String
   trackCreatedAt: DateTime
   trackCreatedAt_not: DateTime
   trackCreatedAt_in: [DateTime!]

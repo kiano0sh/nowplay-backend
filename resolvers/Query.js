@@ -34,7 +34,7 @@ const Query = {
   marksAround: async (parent, args, context) => {
     const { latitude, longitude, maxradiuskm } = args;
 
-    console.log(args)
+    console.log(args);
 
     const response = await client.query(
       `SELECT *
@@ -53,5 +53,3 @@ const Query = {
 module.exports = {
   Query
 };
-
-// (6371 * acos(CAST (cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(32.8547)) * sin(radians(latitude)) AS INTEGER)))

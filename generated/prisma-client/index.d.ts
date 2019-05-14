@@ -332,8 +332,6 @@ export type MusicOrderByInput =
   | "genre_DESC"
   | "duration_ASC"
   | "duration_DESC"
-  | "description_ASC"
-  | "description_DESC"
   | "trackCreatedAt_ASC"
   | "trackCreatedAt_DESC"
   | "createdAt_ASC"
@@ -839,20 +837,6 @@ export interface MusicWhereInput {
   duration_lte?: Maybe<Float>;
   duration_gt?: Maybe<Float>;
   duration_gte?: Maybe<Float>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
   trackCreatedAt?: Maybe<DateTimeInput>;
   trackCreatedAt_not?: Maybe<DateTimeInput>;
   trackCreatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -1014,7 +998,6 @@ export interface MusicCreateWithoutMarksInput {
   artist?: Maybe<String>;
   genre?: Maybe<String>;
   duration: Float;
-  description?: Maybe<String>;
   trackCreatedAt: DateTimeInput;
 }
 
@@ -1547,7 +1530,6 @@ export interface MusicUpdateWithoutMarksDataInput {
   artist?: Maybe<String>;
   genre?: Maybe<String>;
   duration?: Maybe<Float>;
-  description?: Maybe<String>;
   trackCreatedAt?: Maybe<DateTimeInput>;
 }
 
@@ -2430,20 +2412,6 @@ export interface MusicScalarWhereInput {
   duration_lte?: Maybe<Float>;
   duration_gt?: Maybe<Float>;
   duration_gte?: Maybe<Float>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
   trackCreatedAt?: Maybe<DateTimeInput>;
   trackCreatedAt_not?: Maybe<DateTimeInput>;
   trackCreatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -2486,7 +2454,6 @@ export interface MusicUpdateManyDataInput {
   artist?: Maybe<String>;
   genre?: Maybe<String>;
   duration?: Maybe<Float>;
-  description?: Maybe<String>;
   trackCreatedAt?: Maybe<DateTimeInput>;
 }
 
@@ -2602,7 +2569,6 @@ export interface MusicCreateInput {
   artist?: Maybe<String>;
   genre?: Maybe<String>;
   duration: Float;
-  description?: Maybe<String>;
   trackCreatedAt: DateTimeInput;
 }
 
@@ -2634,7 +2600,6 @@ export interface MusicUpdateInput {
   artist?: Maybe<String>;
   genre?: Maybe<String>;
   duration?: Maybe<Float>;
-  description?: Maybe<String>;
   trackCreatedAt?: Maybe<DateTimeInput>;
 }
 
@@ -2670,7 +2635,6 @@ export interface MusicUpdateManyMutationInput {
   artist?: Maybe<String>;
   genre?: Maybe<String>;
   duration?: Maybe<Float>;
-  description?: Maybe<String>;
   trackCreatedAt?: Maybe<DateTimeInput>;
 }
 
@@ -3345,7 +3309,6 @@ export interface Music {
   artist?: String;
   genre?: String;
   duration: Float;
-  description?: String;
   trackCreatedAt: DateTimeOutput;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -3362,7 +3325,6 @@ export interface MusicPromise extends Promise<Music>, Fragmentable {
   artist: () => Promise<String>;
   genre: () => Promise<String>;
   duration: () => Promise<Float>;
-  description: () => Promise<String>;
   trackCreatedAt: () => Promise<DateTimeOutput>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -3381,7 +3343,6 @@ export interface MusicSubscription
   artist: () => Promise<AsyncIterator<String>>;
   genre: () => Promise<AsyncIterator<String>>;
   duration: () => Promise<AsyncIterator<Float>>;
-  description: () => Promise<AsyncIterator<String>>;
   trackCreatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -3400,7 +3361,6 @@ export interface MusicNullablePromise
   artist: () => Promise<String>;
   genre: () => Promise<String>;
   duration: () => Promise<Float>;
-  description: () => Promise<String>;
   trackCreatedAt: () => Promise<DateTimeOutput>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -3857,7 +3817,6 @@ export interface MusicPreviousValues {
   artist?: String;
   genre?: String;
   duration: Float;
-  description?: String;
   trackCreatedAt: DateTimeOutput;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -3874,7 +3833,6 @@ export interface MusicPreviousValuesPromise
   artist: () => Promise<String>;
   genre: () => Promise<String>;
   duration: () => Promise<Float>;
-  description: () => Promise<String>;
   trackCreatedAt: () => Promise<DateTimeOutput>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -3891,7 +3849,6 @@ export interface MusicPreviousValuesSubscription
   artist: () => Promise<AsyncIterator<String>>;
   genre: () => Promise<AsyncIterator<String>>;
   duration: () => Promise<AsyncIterator<Float>>;
-  description: () => Promise<AsyncIterator<String>>;
   trackCreatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;

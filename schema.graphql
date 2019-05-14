@@ -1,145 +1,173 @@
 scalar DateTime
 
 enum trackServices {
-    Soundcloud
-    Spotify
-    Youtube
+  Soundcloud
+  Spotify
+  Youtube
 }
 
 type Query {
-    me: User
-    userByUsername(username: String!): User
-    musicMarks: [MusicMark!]!
-    musicMark(musicMarkId: ID!): MusicMark
-    musicMarksByUser(username: String!): [MusicMark!]!
-    musicByMarkId(musicMarkId: ID!): [Music!]!
-    musics: [Music!]!
-    marksAround(latitude: Float!, longitude: Float!, maxradiuskm: Int!): [MusicMark]!
+  me: User
+  userByUsername(username: String!): User
+  musicMarks: [MusicMark!]!
+  musicMark(musicMarkId: ID!): MusicMark
+  musicMarksByUser(username: String!): [MusicMark!]!
+  musicByMarkId(musicMarkId: ID!): [Music!]!
+  musics: [Music!]!
+  marksAround(
+    latitude: Float!
+    longitude: Float!
+    maxradiuskm: Int!
+  ): [MusicMark]!
 }
 
 type Mutation {
-    register(username: String!, phoneNumber: String, email: String, password: String!): AuthPayload!
-    login(username: String, password: String!): AuthPayload!
-    updateUser(password: String, email: String, firstName: String, lastName: String): User!
-    upsertUserHome(latitude: Float!, longitude: Float!, address: String): Home
-    # No need for entries cuz we already have userId
-    deleteUserHome: Home
-    followingUser(username: String!): User
-    unfollowingUser(username: String!): User
-    addFriend(username: String!): User
-    unFriend(username: String!): User
-    blockUser(username: String!): User
-    unblockUser(username: ID!): User
-    createMusicMark(latitude: Float!, longitude: Float!, title: String, description: String, musics: [MusicInput!]!): MusicMark
-    updateMusicMark(musicMarkId: ID!, latitude: Float, longitude: Float, title: String, description: String): MusicMark
-    deleteMusicMark(musicMarkId: ID!): MusicMark
-    addComment(musicMarkId: ID!, description: String!): Comment!
-    createMusic(musicMarkId: ID!, musics: [MusicInput!]!): MusicMark
-    updateMusic(musicId: ID!, trackId: Int!, trackService: trackServices!, title: String, description: String): Music
-    deleteMusic(musicId: ID!): Music
-    likeMusicMark(musicMarkId: ID!): MusicMark
-    dislikeMusicMark(musicMarkId: ID!): MusicMark
-    favouriteMusicMark(musicMarkId: ID!): MusicMark
-    unfavoriteMusicMark(musicMarkId: ID!): MusicMark
-
+  register(
+    username: String!
+    phoneNumber: String
+    email: String
+    password: String!
+  ): AuthPayload!
+  login(username: String, password: String!): AuthPayload!
+  updateUser(
+    password: String
+    email: String
+    firstName: String
+    lastName: String
+  ): User!
+  upsertUserHome(latitude: Float!, longitude: Float!, address: String): Home
+  # No need for entries cuz we already have userId
+  deleteUserHome: Home
+  followingUser(username: String!): User
+  unfollowingUser(username: String!): User
+  addFriend(username: String!): User
+  unFriend(username: String!): User
+  blockUser(username: String!): User
+  unblockUser(username: ID!): User
+  createMusicMark(
+    latitude: Float!
+    longitude: Float!
+    title: String
+    description: String
+    musics: [MusicInput!]!
+  ): MusicMark
+  updateMusicMark(
+    musicMarkId: ID!
+    latitude: Float
+    longitude: Float
+    title: String
+    description: String
+  ): MusicMark
+  deleteMusicMark(musicMarkId: ID!): MusicMark
+  addComment(musicMarkId: ID!, description: String!): Comment!
+  addMusic(musicMarkId: ID!, musics: [MusicInput!]!): MusicMark
+  updateMusic(
+    musicId: ID!
+    trackId: Int!
+    trackService: trackServices!
+    title: String
+  ): Music
+  deleteMusic(musicId: ID!): Music
+  likeMusicMark(musicMarkId: ID!): MusicMark
+  dislikeMusicMark(musicMarkId: ID!): MusicMark
+  favouriteMusicMark(musicMarkId: ID!): MusicMark
+  unfavoriteMusicMark(musicMarkId: ID!): MusicMark
 }
 
 type AuthPayload {
-    token: String!
-    user: User!
+  token: String!
+  user: User!
 }
 
 type User {
-    id: ID!
-    username: String!
-    password: String!
-    email: String
-    isEmailActive: Boolean
-    phoneNumber: String
-    isPhoneNumberActive: Boolean
-    firstName: String
-    lastName: String
-    homeLocation: Home
-    musicMarks: [MusicMark!]!
-    comments: [Comment!]!
-    likedMarks: [MusicMark!]!
-    followings: [User!]!
-    followers: [User!]!
-    friends: [User!]!
-    blockList: [User!]!
-    lastLogin: DateTime
-    soundCloudToken: String
-    createdAt: DateTime!
-    updatedAt: DateTime!
+  id: ID!
+  username: String!
+  password: String!
+  email: String
+  isEmailActive: Boolean
+  phoneNumber: String
+  isPhoneNumberActive: Boolean
+  firstName: String
+  lastName: String
+  homeLocation: Home
+  musicMarks: [MusicMark!]!
+  comments: [Comment!]!
+  likedMarks: [MusicMark!]!
+  followings: [User!]!
+  followers: [User!]!
+  friends: [User!]!
+  blockList: [User!]!
+  lastLogin: DateTime
+  soundCloudToken: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Home {
-    id: ID!
-    user: User!
-    latitude: Float!
-    longitude: Float!
-    address: String
-    createdAt: DateTime!
-    updatedAt: DateTime!
+  id: ID!
+  user: User!
+  latitude: Float!
+  longitude: Float!
+  address: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Music {
-    id: ID!
-    user: User!
-    marks: [MusicMark!]!
-    title: String
-    uri: String!
-    trackId: Int!
-    trackService: trackServices!
-    artwork: String
-    artist: String
-    genre: String
-    duration: Float!
-    description: String
-    trackCreatedAt: DateTime!
-    createdAt: DateTime!
-    updatedAt: DateTime!
+  id: ID!
+  user: User!
+  marks: [MusicMark!]!
+  title: String
+  uri: String!
+  trackId: Int!
+  trackService: trackServices!
+  artwork: String
+  artist: String
+  genre: String
+  duration: Float!
+  trackCreatedAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type MusicMark {
-    id: ID!
-    user: User!
-    latitude: Float!
-    longitude: Float!
-    title: String
-    description: String
-    musics: [Music!]!
-    comments: [Comment!]!
-    likedBy: [User]
-    favouriteFor: [User]
-    createdAt: DateTime!
-    updatedAt: DateTime!
+  id: ID!
+  user: User!
+  latitude: Float!
+  longitude: Float!
+  title: String
+  description: String
+  musics: [Music!]!
+  comments: [Comment!]!
+  likedBy: [User]
+  favouriteFor: [User]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Comment {
-    id: ID!
-    musicMark: MusicMark!
-    description: String!
-    author: User!
-    createdAt: DateTime!
+  id: ID!
+  musicMark: MusicMark!
+  description: String!
+  author: User!
+  createdAt: DateTime!
 }
 
 input MusicMarkInput {
-    id: ID!
-    latitude: Float!
-    longitude: Float!
-    title: String
-    description: String
+  id: ID!
+  latitude: Float!
+  longitude: Float!
+  title: String
+  description: String
 }
 
 input MusicInput {
-    trackId: Int!
-    trackService: trackServices!
-    title: String
-    artwork: String
-    artist: String
-    genre: String
-    duration: Float!
-    description: String
-    trackCreatedAt: DateTime!
+  trackId: Int!
+  trackService: trackServices!
+  title: String
+  artwork: String
+  artist: String
+  genre: String
+  duration: Float!
+  trackCreatedAt: DateTime!
 }

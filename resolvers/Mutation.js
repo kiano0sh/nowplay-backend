@@ -471,9 +471,9 @@ const Mutation = {
         }
     },
     // Adding music to places by place owner or others
-    createMusic: async (parent, args, context) => {
+    addMusic: async (parent, args, context) => {
         const {musicMarkId, musics} = args;
-        await Schema.createMusic(musics, musicMarkId, context);
+        await Schema.addMusic(musics, musicMarkId, context);
         let musicsWithUser = [];
         const userId = getUserId(context);
         const user = await context.prisma.musicMark({id: musicMarkId}).user();
@@ -492,7 +492,7 @@ const Mutation = {
             if (isMusicExists){
                 throw new Error('You can\'t add duplicate songs!')
             }
-            // Adding user for each music object (later we need to track em to find which user added music for the same mark)
+            // Adding user for each music object (later we need to track them to find which user added music for the same mark)
             musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
 
         }));
@@ -527,8 +527,8 @@ const Mutation = {
         }
     },
     updateMusic: async (parent, args, context) => {
-        const {musicId, uri, title, description} = args;
-        Schema.updateMusic(uri, title, description);
+        const {musicId, uri, title} = args;
+        Schema.updateMusic(uri, title);
         return await context.prisma.updateMusic({
             where: {
                 id: musicId
@@ -536,7 +536,6 @@ const Mutation = {
             data: {
                 uri,
                 title,
-                description
             }
         })
     },

@@ -432,7 +432,7 @@ const Mutation = {
                 }
             })
         } else {
-            throw new Error("Changing place ability is locked because others added music in here!")
+            throw new Error("Changing place feature is locked because others added music in here!")
         }
     },
     // Only owner could delete the mark place on map (if there's no extra music added by others)
@@ -496,7 +496,7 @@ const Mutation = {
             musicsWithUser.push(Object.assign({}, {...music, user: {connect: {id: userId}}}))
 
         }));
-        if (userId === user) {
+        if (userId === user.id) {
             return await context.prisma.updateMusicMark({
                 where: {
                     id: musicMarkId

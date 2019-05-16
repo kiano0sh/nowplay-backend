@@ -118,7 +118,7 @@ const Schema = {
 
   titleAndDescriptionValidation(title, description) {
     const titleAndDescriptionSchema = Joi.object().keys({
-      title: Joi.string().max(100),
+      title: Joi.string().max(500),
       description: Joi.string().max(1000)
     });
 

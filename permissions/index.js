@@ -38,12 +38,14 @@ const rules = {
 const permissions = shield({
   Query: {
     me: rules.isAuthenticatedUser,
-    userByUsername: rules.isAuthenticatedUser
-    // musicMarks: rules.isAuthenticatedUser,
-    // musicMark: rules.isAuthenticatedUser,
-    // musicMarksByUser: rules.isAuthenticatedUser,
-    // musicByMarkId: rules.isAuthenticatedUser,
-    // musics: rules.isAuthenticatedUser,
+    userByUsername: rules.isAuthenticatedUser,
+    musicMarks: rules.isAuthenticatedUser,
+    musicMark: rules.isAuthenticatedUser,
+    musicMarksByUsername: rules.isAuthenticatedUser,
+    myMusicMarks: rules.isAuthenticatedUser,
+    musicByMarkId: rules.isAuthenticatedUser,
+    musics: rules.isAuthenticatedUser,
+    marksAround: rules.isAuthenticatedUser,
   },
   Mutation: {
     updateUser: rules.isAuthenticatedUser,

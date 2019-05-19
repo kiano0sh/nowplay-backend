@@ -9,9 +9,10 @@ enum trackServices {
 type Query {
   me: User
   userByUsername(username: String!): User
+  myMusicMarks(first: Int, skip: Int): [MusicMark!]!
   musicMarks: [MusicMark!]!
   musicMark(musicMarkId: ID!): MusicMark
-  musicMarksByUser(username: String!): [MusicMark!]!
+  musicMarksByUsername(username: String!): [MusicMark!]!
   musicByMarkId(musicMarkId: ID!): [Music!]!
   musics: [Music!]!
   marksAround(

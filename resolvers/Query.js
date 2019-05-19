@@ -20,9 +20,20 @@ const Query = {
     const { musicMarkId } = args;
     return await context.prisma.musicMark({ id: musicMarkId });
   },
-  musicMarksByUser: async (parent, args, context) => {
+  musicMarksByUsername: async (parent, args, context) => {
     const { username } = args;
     return await context.prisma.user({ username }).musicMarks();
+  },
+  myMusicMarks: async (parent, args, context) => {
+    const userId = getUserId(context);
+    let { first, skip } = args;
+    if (!first || !skip) {
+      skip = 0;
+      first = 10;
+    }
+    return await context.prisma
+      .user({ id: userId })
+      .musicMarks({ orderBy: "createdAt_DESC", first, skip });
   },
   musicByMarkId: async (parent, args, context) => {
     const { musicMarkId } = args;

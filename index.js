@@ -22,9 +22,15 @@ const server = new GraphQLServer({
 
 // server.use('*', cors({ origin: 'http://localhost:8081' }));
 
+const options = {
+  port: process.env.PORT ? process.env.PORT : 4000
+};
+
 const startServer = async () => {
   await client.connect();
-  server.start(() => console.log("Server is running on http://localhost:4000"));
+  server.start(options, ({ port }) =>
+    console.log(`Server is running on http://localhost:${port}`)
+  );
 };
 
 startServer();

@@ -27,7 +27,7 @@ type User {
 
 type Home {
   id: ID! @id
-  user: User! @relation(name: "HomeOwner", onDelete: SET_NULL)
+  user: User! @relation(name: "HomeOwner")
   latitude: Float!
   longitude: Float!
   address: String
@@ -43,7 +43,7 @@ enum trackServices {
 
 type Music {
   id: ID! @id
-  user: User! @relation(name: "MusicAdder", onDelete: SET_NULL)
+  user: User! @relation(name: "MusicAdder")
   marks: MusicMark! @relation(name: "Musics")
   title: String
   trackId: Int!

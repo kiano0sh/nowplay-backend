@@ -5,7 +5,7 @@ const client = new Client({
   user: "prisma",
   password: "prisma",
   host: "localhost",
-  port: 3001
+  port: 3002
 });
 
 module.exports = {

@@ -389,7 +389,6 @@ const Mutation = {
                     }
                 ]
             });
-            console.log(isMusicExists)
             if (isMusicExists) {
                 throw new Error('You can\'t add duplicate songs!')
             }

@@ -4,7 +4,7 @@ services:
     image: prismagraphql/prisma:1.32.2
     restart: always
     ports:
-      - "4466:4466"
+      - "4465:4466"
     environment:
       PRISMA_CONFIG: |
         port: 4466
@@ -18,7 +18,7 @@ services:
             migrations: true
   postgres:
     ports:
-      - "3001:5432"
+      - "3002:5432"
     image: postgres:10.3
     restart: always
     environment:

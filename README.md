@@ -6,26 +6,16 @@ This is the back-end of Nowplay App.
 ### Requirements
 - Node.js
 - Npm
+- Prisma CLI
 
 ## Install
 
 ```sh
-npm i
+$ docker-compose up -d
+$ prisma deploy
+$ npm i
 ```
-
-or
-
-```sh
-yarn
-```
-
 ### How does it work
 ```sh
-npm start
-```
-
-or
-
-```sh
-yarn start
+$ npm start
 ```

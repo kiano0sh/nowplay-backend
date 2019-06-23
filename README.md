@@ -1,5 +1,5 @@
 # Nowplay Back-end
-This is the back-end of Nowplay App.
+This is the back-end of Nowplay project.
 
 ## Setup
 

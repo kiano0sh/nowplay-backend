@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "kian00sh",
-  "license": "MIT",
+  "license": "GPLv3",
   "dependencies": {
     "@types/pg": "^7.4.14",
     "apollo-errors": "^1.9.0",

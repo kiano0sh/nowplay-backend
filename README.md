@@ -2,6 +2,10 @@
 
 This is the back-end of NowPlay project. You can find front-end [here](https://github.com/kiano0sh/nowplay-native-app).
 
+## Project Idea
+
+NowPlay is a demo project which aims on making a kind of social media which people be able to mark places on map and add their favorite musics or playlists to it, it is also possible for others to add songs/musics to those places, after a while we can recognize musical taste of people based on different locations.
+
 ## Setup
 
 ### Requirements

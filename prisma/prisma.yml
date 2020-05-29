@@ -2,7 +2,7 @@
 
 # Specifies the HTTP endpoint of your Prisma API.
 #endpoint: https://eu1.prisma.sh/kianoosh-hooshmand-21db8d/NowplayServer/dev
-endpoint: http://localhost:4466
+endpoint: http://localhost:4465
 
 # Defines your models, each model is mapped to the database as a table.
 datamodel: datamodel.prisma

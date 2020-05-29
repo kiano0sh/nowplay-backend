@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const myCustomJoi = Joi.extend(require("joi-phone-number"));
 const { createError } = require("apollo-errors");
 
 // process.on('unhandledRejection', (reason, promise) => {
@@ -9,7 +8,7 @@ const { createError } = require("apollo-errors");
 // });
 
 const FooError = createError("FooError", {
-  message: "A foo error has occurred"
+  message: "A foo error has occurred",
 });
 
 const Schema = {
@@ -24,7 +23,7 @@ const Schema = {
         .regex(/^[a-zA-Z0-9]{3,30}$/)
         .required(),
       email: Joi.string().email({ minDomainAtoms: 2 }),
-      phoneNumber: myCustomJoi.string().phoneNumber()
+      phoneNumber: Joi.string().max(10),
     });
 
     const { error, value } = Joi.validate(
@@ -46,7 +45,7 @@ const Schema = {
         .required(),
       password: Joi.string()
         .regex(/^[a-zA-Z0-9]{3,30}$/)
-        .required()
+        .required(),
     });
 
     const { error, value } = Joi.validate({ username, password }, loginSchema);
@@ -89,7 +88,7 @@ const Schema = {
           .max(180)
           .precision(5)
           .strict()
-          .required()
+          .required(),
       });
     } else {
       coordinateSchema = Joi.object().keys({
@@ -102,7 +101,7 @@ const Schema = {
           .min(-180)
           .max(180)
           .precision(5)
-          .strict()
+          .strict(),
       });
     }
 
@@ -119,7 +118,7 @@ const Schema = {
   titleAndDescriptionValidation(title, description) {
     const titleAndDescriptionSchema = Joi.object().keys({
       title: Joi.string().max(500),
-      description: Joi.string().max(1000)
+      description: Joi.string().max(1000),
     });
 
     const { error, value } = Joi.validate(
@@ -160,7 +159,7 @@ const Schema = {
     this.coordinateValidation(latitude, longitude);
 
     const upsertUserHomeSchema = Joi.object().keys({
-      address: Joi.string().max(200)
+      address: Joi.string().max(200),
     });
 
     const { error, value } = Joi.validate({ address }, upsertUserHomeSchema);
@@ -172,7 +171,7 @@ const Schema = {
 
   createMusicMark(latitude, longitude, musics, title, description) {
     this.coordinateValidation(latitude, longitude, true);
-    musics.map(async music => {
+    musics.map(async (music) => {
       this.trackIdValidation(music.trackId);
       this.trackServiceValidation(music.trackService);
       this.titleAndDescriptionValidation(music.title, undefined);
@@ -190,7 +189,7 @@ const Schema = {
   },
 
   addMusic(musics) {
-    musics.map(music => {
+    musics.map((music) => {
       this.trackIdValidation(music.trackId);
       this.trackServiceValidation(music.trackService);
       this.titleAndDescriptionValidation(music.title, undefined);
@@ -201,11 +200,11 @@ const Schema = {
     this.trackIdValidation(trackId);
     this.trackServiceValidation(trackService);
     this.titleAndDescriptionValidation(title, undefined);
-  }
+  },
 };
 
 // TODO add validation for artwork, artist, genre, duration, description, trackCreatedAt in Music
 
 module.exports = {
-  Schema
+  Schema,
 };

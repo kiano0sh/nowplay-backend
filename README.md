@@ -4,7 +4,7 @@ This is the back-end of NowPlay project. You can find front-end [here](https://g
 
 ## Project Idea
 
-NowPlay is a demo project which aims on making a kind of social media which people be able to mark places on map and add their favorite musics or playlists to it, it is also possible for others to add songs/musics to those places, after a while we can recognize musical taste of people based on different locations.
+NowPlay is a demo project which aims on making a kind of social media which people be able to mark places on map and add their favorite musics or playlists to it, it is also possible for others to add songs/musics to those places, after a while we can recognize musical taste of people based on different locations. Right now it works with [Soundcloud](https://soundcloud.com/) API but it is designed to work with other APIs as well.
 
 ## Setup
 
